@@ -15,15 +15,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/bt_layoutInflater"
+                android:id="@+id/bt_create_layoutInflater"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="LayoutInflater"/>
-            <Button
-                android:id="@+id/bt_click"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="view click"/>
+                android:text="Create LayoutInflater"/>
         </LinearLayout>
     </ScrollView>
 
