@@ -6,12 +6,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewbinding.ViewBinding;
 
-import com.example.study.util.PackageUtil;
+import com.example.study.util.tool.PackageUtil;
 
 public abstract class BaseActivity<P extends BasePresenter, VB extends ViewBinding> extends AppCompatActivity {
     protected String TAG;
     private VB binding;
-    private P mPresenter;
+    protected P mPresenter;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

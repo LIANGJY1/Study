@@ -24,6 +24,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="view click"/>
+            <Button
+                android:id="@+id/bt_params"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="view params"/>
         </LinearLayout>
     </ScrollView>
 

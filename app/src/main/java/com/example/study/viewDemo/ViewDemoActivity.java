@@ -6,6 +6,7 @@ import com.example.study.base.BaseActivity;
 import com.example.study.databinding.ActivityViewDemoBinding;
 import com.example.study.viewDemo.LayoutInflaterDemo.activity.LayoutInflaterDemoActivity;
 import com.example.study.viewDemo.viewSystem.activity.ViewClickDemoActivity;
+import com.example.study.viewDemo.viewSystem.activity.ViewParamsDemoActivity;
 
 public class ViewDemoActivity extends BaseActivity<ViewDemoPresenter, ActivityViewDemoBinding> {
 
@@ -18,6 +19,7 @@ public class ViewDemoActivity extends BaseActivity<ViewDemoPresenter, ActivityVi
     private void initializeActivity() {
         getViewBound().btLayoutInflater.setOnClickListener(v -> startActivity(new Intent(ViewDemoActivity.this, LayoutInflaterDemoActivity.class)));
         getViewBound().btClick.setOnClickListener(v -> startActivity(new Intent(ViewDemoActivity.this, ViewClickDemoActivity.class)));
+        getViewBound().btParams.setOnClickListener(v -> startActivity(new Intent(ViewDemoActivity.this, ViewParamsDemoActivity.class)));
     }
 
     @Override

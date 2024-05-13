@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Study"
         tools:targetApi="31">
         <activity
+            android:name=".viewDemo.viewSystem.activity.ViewParamsDemoActivity"
+            android:exported="false" />
+        <activity
             android:name=".viewDemo.viewSystem.activity.ViewClickDemoActivity"
             android:exported="false" />
         <activity

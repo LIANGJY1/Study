@@ -1,4 +1,4 @@
-package com.example.study.util;
+package com.example.study.util.tool;
 
 import java.util.Objects;
 
