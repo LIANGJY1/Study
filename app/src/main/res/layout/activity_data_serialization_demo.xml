@@ -15,15 +15,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/bt_view"
+                android:id="@+id/bt_serialization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="View test"/>
+                android:text="Serializable"/>
             <Button
-                android:id="@+id/bt_java"
+                android:id="@+id/bt_externalizable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Java test"/>
+                android:text="Externalizable"/>
+            <Button
+                android:id="@+id/bt_parcelable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Parcelable"/>
         </LinearLayout>
     </ScrollView>
 

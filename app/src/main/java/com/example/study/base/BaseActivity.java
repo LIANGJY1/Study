@@ -18,7 +18,7 @@ public abstract class BaseActivity<P extends BasePresenter, VB extends ViewBindi
         binding = getViewBinding();
         TAG = PackageUtil.getSimpleClassName(this);
         beforeSetContentView();
-        setContentView(binding .getRoot());
+        setContentView(binding.getRoot());
         mPresenter = onLoadPresenter();
         afterSetContentView();
     }

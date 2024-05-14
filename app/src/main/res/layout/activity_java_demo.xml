@@ -15,15 +15,10 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/bt_view"
+                android:id="@+id/bt_serialization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="View test"/>
-            <Button
-                android:id="@+id/bt_java"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Java test"/>
+                android:text="Data Serialization"/>
         </LinearLayout>
     </ScrollView>
 
