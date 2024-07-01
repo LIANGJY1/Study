@@ -24,6 +24,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Java test"/>
+            <Button
+                android:id="@+id/bt_aidl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Binder test"/>
         </LinearLayout>
     </ScrollView>
 
