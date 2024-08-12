@@ -20,7 +20,6 @@ public class AIDLDemoActivity extends BaseActivity<BasePresenter, ActivityAidlde
     protected void afterSetContentView() {
         super.afterSetContentView();
         initializeActivity();
-        getApplicationContext()
     }
 
     private void initializeActivity() {
