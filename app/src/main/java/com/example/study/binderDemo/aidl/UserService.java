@@ -6,10 +6,8 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -22,11 +20,8 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.study.R;
-import com.example.study.notification.NotificationActivity;
-import com.liang.ipccompat.MIpcService;
-import com.reachauto.rms.ipccompat.interfaces.RIPCInterface;
-import com.reachauto.rms.ipccompat.service.RIPCService;
+import com.example.studysdk.IUserManager;
+import com.example.studysdk.User;
 
 import java.util.ArrayList;
 import java.util.List;

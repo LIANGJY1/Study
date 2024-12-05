@@ -11,6 +11,8 @@ import android.util.Log;
 import com.example.study.base.BaseActivity;
 import com.example.study.base.BasePresenter;
 import com.example.study.databinding.ActivityAidldemoBinding;
+import com.example.studysdk.IUserManager;
+import com.example.studysdk.User;
 
 import java.util.List;
 
