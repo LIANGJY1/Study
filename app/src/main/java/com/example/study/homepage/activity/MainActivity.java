@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.study.base.BaseActivity;
 import com.example.study.binderDemo.BinderDemoActivity;
+import com.example.study.broadcast.BroadcastActivity;
 import com.example.study.databinding.ActivityMainBinding;
 import com.example.study.homepage.presenter.MainPresenter;
 import com.example.study.javaDemo.JavaDemoActivity;
@@ -65,6 +66,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         getViewBound().btJava.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, JavaDemoActivity.class)));
         getViewBound().btAidl.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BinderDemoActivity.class)));
         getViewBound().btNotification.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationActivity.class)));
+        getViewBound().btBroadcast.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BroadcastActivity.class)));
     }
 
     private void test() {

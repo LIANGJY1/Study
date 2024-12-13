@@ -34,6 +34,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Notification test"/>
+            <Button
+                android:id="@+id/bt_broadcast"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Broadcast test"/>
         </LinearLayout>
     </ScrollView>
 
