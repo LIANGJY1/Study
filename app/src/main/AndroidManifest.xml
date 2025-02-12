@@ -47,6 +47,14 @@
             android:foregroundServiceType="camera"
             tools:ignore="ForegroundServicePermission" />
 
+        <service
+            android:name=".binderDemo.aidl.BookService"
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="camera"
+            android:process=":remote"
+            tools:ignore="ForegroundServicePermission" />
+
         <activity
             android:name=".javaDemo.dataSerializationDemo.activity.ParcelableDemoActivity"
             android:exported="false" />

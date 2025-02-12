@@ -14,17 +14,16 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 
-
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.example.studysdk.IUserManager2;
-import com.example.studysdk.User;
+import com.example.studysdk.Book;
+import com.example.studysdk.BookManagerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserService extends Service {
+public class BookService extends Service {
     private NotificationManager notificationManager;
     private Notification notification;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -50,9 +49,9 @@ public class UserService extends Service {
                 .build();
     }
 
-    private ArrayList<User> userArrayList = new ArrayList<>();
+    private ArrayList<Book> bookArrayList = new ArrayList<>();
 
-    public UserService() {
+    public BookService() {
     }
 
     @SuppressLint("ForegroundServiceType")
@@ -60,8 +59,8 @@ public class UserService extends Service {
     public void onCreate() {
         super.onCreate();
 //        addInterface(this);
-        userArrayList.add(new User("zhang", 18));
-        userArrayList.add(new User("li", 18));
+        bookArrayList.add(new Book("zhang", 18));
+        bookArrayList.add(new Book("li", 18));
         createNotification();
 
 //        startForeground(1, notification);
@@ -74,15 +73,15 @@ public class UserService extends Service {
         return binder;
     }
 
-    private Binder binder = new IUserManager2.Stub() {
+    private Binder binder = new BookManagerImpl() {
         @Override
-        public List<User> getUser() throws RemoteException {
-            return userArrayList;
+        public List<Book> getBookList() throws RemoteException {
+            return bookArrayList;
         }
 
         @Override
-        public void addUser(User user) throws RemoteException {
-            userArrayList.add(user);
+        public void addBook(Book book) throws RemoteException {
+            bookArrayList.add(book);
         }
     };
 
