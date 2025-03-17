@@ -12,9 +12,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,6 +25,23 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Study"
         tools:targetApi="31">
+        <activity
+            android:name=".service.ServiceTestActivity"
+            android:exported="false" />
+
+        <service
+            android:name=".service.MyLocalService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".activityTest.ALifecycleActivity"
+            android:exported="true"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activityTest.ActivityTestActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
         <activity
             android:name=".broadcast.BroadcastActivity"
             android:exported="false" />
@@ -46,7 +64,6 @@
             android:exported="true"
             android:foregroundServiceType="camera"
             tools:ignore="ForegroundServicePermission" />
-
         <service
             android:name=".binderDemo.aidl.BookService"
             android:enabled="true"
@@ -88,7 +105,8 @@
         <activity
             android:name=".homepage.activity.MainActivity"
             android:configChanges="locale|layoutDirection"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -101,7 +119,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.example.study.broadcast.MY_BROADCAST"/>
+                <action android:name="com.example.study.broadcast.MY_BROADCAST" />
             </intent-filter>
         </receiver>
     </application>

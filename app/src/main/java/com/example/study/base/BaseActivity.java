@@ -37,9 +37,9 @@ public abstract class BaseActivity<P extends BasePresenter, VB extends ViewBindi
     protected void beforeSetContentView() {
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        binding = null;
-    }
+//    @Override
+//    public void finish() {
+//        super.finish();
+//        binding = null;
+//    }
 }

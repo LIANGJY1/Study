@@ -39,6 +39,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Broadcast test"/>
+            <Button
+                android:id="@+id/bt_activity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Activity test"/>
+            <Button
+                android:id="@+id/bt_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Service test"/>
         </LinearLayout>
     </ScrollView>
 

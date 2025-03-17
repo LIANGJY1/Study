@@ -59,32 +59,32 @@ public class SingletonDemo {
 //
 //    }
 //
-//    private static SingletonDemo INSTANCE;
+    private static SingletonDemo INSTANCE;
+//
+    public static SingletonDemo getInstance() {
+        if (INSTANCE == null) {
+            synchronized (SingletonDemo.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new SingletonDemo();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
+
+
+//
+//    // 懒汉式4：静态内部类
+//    private SingletonDemo(){}
+//
+//    private static class Inner {
+//        private static final SingletonDemo INSTANCE = new SingletonDemo();
+//    }
 //
 //    public static SingletonDemo getInstance() {
-//        if (INSTANCE == null) {
-//            synchronized (SingletonDemo.class) {
-//                if (INSTANCE == null) {
-//                    INSTANCE = new SingletonDemo();
-//                }
-//            }
-//        }
-//        return INSTANCE;
+//        return Inner.INSTANCE;
 //    }
-
-
-
-
-    // 懒汉式4：静态内部类
-    private SingletonDemo(){}
-
-    private static class Inner {
-        private static final SingletonDemo INSTANCE = new SingletonDemo();
-    }
-
-    public static SingletonDemo getInstance() {
-        return Inner.INSTANCE;
-    }
 
 
 }

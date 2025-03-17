@@ -4,13 +4,15 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.study.activityTest.ActivityTestActivity;
 import com.example.study.base.BaseActivity;
 import com.example.study.binderDemo.BinderDemoActivity;
 import com.example.study.broadcast.BroadcastActivity;
@@ -18,7 +20,11 @@ import com.example.study.databinding.ActivityMainBinding;
 import com.example.study.homepage.presenter.MainPresenter;
 import com.example.study.javaDemo.JavaDemoActivity;
 import com.example.study.notification.NotificationActivity;
+import com.example.study.pattern.singleton.Person;
+import com.example.study.service.ServiceTestActivity;
+import com.example.study.util.tool.LogUtil;
 import com.example.study.viewDemo.ViewDemoActivity;
+import com.liang.log.MLog;
 
 public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBinding> {
 
@@ -67,6 +73,8 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         getViewBound().btAidl.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BinderDemoActivity.class)));
         getViewBound().btNotification.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationActivity.class)));
         getViewBound().btBroadcast.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BroadcastActivity.class)));
+        getViewBound().btActivity.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ActivityTestActivity.class)));
+        getViewBound().btService.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ServiceTestActivity.class)));
     }
 
     private void test() {
@@ -103,5 +111,76 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     @Override
     protected ActivityMainBinding getViewBinding() {
         return ActivityMainBinding.inflate(getLayoutInflater());
+    }
+
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Person.run();
+//        MLog.i(LogUtil.getCurrentMethodName());
+//        Book book1 = new Book("111");
+//        Book book2 = book1;
+//        rename(book1);
+//        MLog.i(book1.getName());
+    }
+
+    private void rename(Book book1) {
+        Book book2 = book1;
+        book2.setName("222");
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        MLog.i(LogUtil.getCurrentMethodName());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        MLog.i(LogUtil.getCurrentMethodName());
     }
 }
