@@ -114,32 +114,32 @@ import com.example.javatest.concurrent.TimeUnit;
  */
 public class ExecutorCompletionService<V> implements CompletionService<V> {
     private final Executor executor;
-    private final com.example.javatest.concurrent.AbstractExecutorService aes;
-    private final BlockingQueue<com.example.javatest.concurrent.Future<V>> completionQueue;
+    private final AbstractExecutorService aes;
+    private final BlockingQueue<Future<V>> completionQueue;
 
     /**
      * FutureTask extension to enqueue upon completion.
      */
     private static class QueueingFuture<V> extends FutureTask<Void> {
-        QueueingFuture(com.example.javatest.concurrent.RunnableFuture<V> task,
-                       BlockingQueue<com.example.javatest.concurrent.Future<V>> completionQueue) {
+        QueueingFuture(RunnableFuture<V> task,
+                       BlockingQueue<Future<V>> completionQueue) {
             super(task, null);
             this.task = task;
             this.completionQueue = completionQueue;
         }
-        private final com.example.javatest.concurrent.Future<V> task;
-        private final BlockingQueue<com.example.javatest.concurrent.Future<V>> completionQueue;
+        private final Future<V> task;
+        private final BlockingQueue<Future<V>> completionQueue;
         protected void done() { completionQueue.add(task); }
     }
 
-    private com.example.javatest.concurrent.RunnableFuture<V> newTaskFor(com.example.javatest.concurrent.Callable<V> task) {
+    private RunnableFuture<V> newTaskFor(Callable<V> task) {
         if (aes == null)
             return new FutureTask<V>(task);
         else
             return aes.newTaskFor(task);
     }
 
-    private com.example.javatest.concurrent.RunnableFuture<V> newTaskFor(Runnable task, V result) {
+    private RunnableFuture<V> newTaskFor(Runnable task, V result) {
         if (aes == null)
             return new FutureTask<V>(task, result);
         else
@@ -158,9 +158,9 @@ public class ExecutorCompletionService<V> implements CompletionService<V> {
         if (executor == null)
             throw new NullPointerException();
         this.executor = executor;
-        this.aes = (executor instanceof com.example.javatest.concurrent.AbstractExecutorService) ?
-            (com.example.javatest.concurrent.AbstractExecutorService) executor : null;
-        this.completionQueue = new LinkedBlockingQueue<com.example.javatest.concurrent.Future<V>>();
+        this.aes = (executor instanceof AbstractExecutorService) ?
+            (AbstractExecutorService) executor : null;
+        this.completionQueue = new LinkedBlockingQueue<Future<V>>();
     }
 
     /**
@@ -177,11 +177,11 @@ public class ExecutorCompletionService<V> implements CompletionService<V> {
      * @throws NullPointerException if executor or completionQueue are {@code null}
      */
     public ExecutorCompletionService(Executor executor,
-                                     BlockingQueue<com.example.javatest.concurrent.Future<V>> completionQueue) {
+                                     BlockingQueue<Future<V>> completionQueue) {
         if (executor == null || completionQueue == null)
             throw new NullPointerException();
         this.executor = executor;
-        this.aes = (executor instanceof com.example.javatest.concurrent.AbstractExecutorService) ?
+        this.aes = (executor instanceof AbstractExecutorService) ?
             (AbstractExecutorService) executor : null;
         this.completionQueue = completionQueue;
     }
@@ -190,9 +190,9 @@ public class ExecutorCompletionService<V> implements CompletionService<V> {
      * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public com.example.javatest.concurrent.Future<V> submit(Callable<V> task) {
+    public Future<V> submit(Callable<V> task) {
         if (task == null) throw new NullPointerException();
-        com.example.javatest.concurrent.RunnableFuture<V> f = newTaskFor(task);
+        RunnableFuture<V> f = newTaskFor(task);
         executor.execute(new QueueingFuture<V>(f, completionQueue));
         return f;
     }

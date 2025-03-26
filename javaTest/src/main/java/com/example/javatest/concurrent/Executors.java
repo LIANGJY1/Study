@@ -194,7 +194,7 @@ public class Executors {
     public static com.example.javatest.concurrent.ExecutorService newSingleThreadExecutor() {
         return new FinalizableDelegatedExecutorService
             (new ThreadPoolExecutor(1, 1,
-                                    0L, com.example.javatest.concurrent.TimeUnit.MILLISECONDS,
+                                    0L, TimeUnit.MILLISECONDS,
                                     new LinkedBlockingQueue<Runnable>()));
     }
 

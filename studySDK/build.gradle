@@ -39,5 +39,6 @@ dependencies {
 //    implementation "com.liang.rxjava2:rxjava:2.2.19"
     implementation(name: 'MLog', ext: 'aar')
     implementation project(":rxjava")
+    implementation project(":javaTest")
 
 }

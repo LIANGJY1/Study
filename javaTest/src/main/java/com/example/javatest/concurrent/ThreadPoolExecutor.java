@@ -40,20 +40,6 @@ import java.util.ConcurrentModificationException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import com.example.javatest.concurrent.AbstractExecutorService;
-import com.example.javatest.concurrent.ArrayBlockingQueue;
-import com.example.javatest.concurrent.BlockingQueue;
-import com.example.javatest.concurrent.ExecutorService;
-import com.example.javatest.concurrent.Executors;
-import com.example.javatest.concurrent.Future;
-import com.example.javatest.concurrent.FutureTask;
-import com.example.javatest.concurrent.LinkedBlockingQueue;
-import com.example.javatest.concurrent.RejectedExecutionException;
-import com.example.javatest.concurrent.RejectedExecutionHandler;
-import com.example.javatest.concurrent.ScheduledThreadPoolExecutor;
-import com.example.javatest.concurrent.SynchronousQueue;
-import com.example.javatest.concurrent.ThreadFactory;
-import com.example.javatest.concurrent.TimeUnit;
 import com.example.javatest.concurrent.atomic.AtomicInteger;
 import com.example.javatest.concurrent.locks.AbstractQueuedSynchronizer;
 import com.example.javatest.concurrent.locks.Condition;
@@ -67,7 +53,7 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
 /**
  * An {@link ExecutorService} that executes each submitted task using
  * one of possibly several pooled threads, normally configured
- * using {@link com.example.javatest.concurrent.Executors} factory methods.
+ * using {@link Executors} factory methods.
  *
  * <p>Thread pools address two different problems: they usually
  * provide improved performance when executing large numbers of
@@ -80,11 +66,11 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  * <p>To be useful across a wide range of contexts, this class
  * provides many adjustable parameters and extensibility
  * hooks. However, programmers are urged to use the more convenient
- * {@link com.example.javatest.concurrent.Executors} factory methods {@link
- * com.example.javatest.concurrent.Executors#newCachedThreadPool} (unbounded thread pool, with
- * automatic thread reclamation), {@link com.example.javatest.concurrent.Executors#newFixedThreadPool}
+ * {@link Executors} factory methods {@link
+ * Executors#newCachedThreadPool} (unbounded thread pool, with
+ * automatic thread reclamation), {@link Executors#newFixedThreadPool}
  * (fixed size thread pool) and {@link
- * com.example.javatest.concurrent.Executors#newSingleThreadExecutor} (single background thread), that
+ * Executors#newSingleThreadExecutor} (single background thread), that
  * preconfigure settings for the most common usage
  * scenarios. Otherwise, use the following guide when manually
  * configuring and tuning this class:
@@ -122,8 +108,8 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  *
  * <dt>Creating new threads</dt>
  *
- * <dd>New threads are created using a {@link com.example.javatest.concurrent.ThreadFactory}.  If not
- * otherwise specified, a {@link com.example.javatest.concurrent.Executors#defaultThreadFactory} is
+ * <dd>New threads are created using a {@link ThreadFactory}.  If not
+ * otherwise specified, a {@link Executors#defaultThreadFactory} is
  * used, that creates threads to all be in the same {@link
  * ThreadGroup} and with the same {@code NORM_PRIORITY} priority and
  * non-daemon status. By supplying a different ThreadFactory, you can
@@ -141,13 +127,13 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  *
  * <dd>If the pool currently has more than corePoolSize threads,
  * excess threads will be terminated if they have been idle for more
- * than the keepAliveTime (see {@link #getKeepAliveTime(com.example.javatest.concurrent.TimeUnit)}).
+ * than the keepAliveTime (see {@link #getKeepAliveTime(TimeUnit)}).
  * This provides a means of reducing resource consumption when the
  * pool is not being actively used. If the pool becomes more active
  * later, new threads will be constructed. This parameter can also be
  * changed dynamically using method {@link #setKeepAliveTime(long,
- * com.example.javatest.concurrent.TimeUnit)}.  Using a value of {@code Long.MAX_VALUE} {@link
- * com.example.javatest.concurrent.TimeUnit#NANOSECONDS} effectively disables idle threads from ever
+ * TimeUnit)}.  Using a value of {@code Long.MAX_VALUE} {@link
+ * TimeUnit#NANOSECONDS} effectively disables idle threads from ever
  * terminating prior to shut down. By default, the keep-alive policy
  * applies only when there are more than corePoolSize threads, but
  * method {@link #allowCoreThreadTimeOut(boolean)} can be used to
@@ -156,7 +142,7 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  *
  * <dt>Queuing</dt>
  *
- * <dd>Any {@link com.example.javatest.concurrent.BlockingQueue} may be used to transfer and hold
+ * <dd>Any {@link BlockingQueue} may be used to transfer and hold
  * submitted tasks.  The use of this queue interacts with pool sizing:
  *
  * <ul>
@@ -226,14 +212,14 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  * the Executor uses finite bounds for both maximum threads and work queue
  * capacity, and is saturated.  In either case, the {@code execute} method
  * invokes the {@link
- * com.example.javatest.concurrent.RejectedExecutionHandler#rejectedExecution(Runnable, ThreadPoolExecutor)}
- * method of its {@link com.example.javatest.concurrent.RejectedExecutionHandler}.  Four predefined handler
+ * RejectedExecutionHandler#rejectedExecution(Runnable, ThreadPoolExecutor)}
+ * method of its {@link RejectedExecutionHandler}.  Four predefined handler
  * policies are provided:
  *
  * <ol>
  *
  * <li>In the default {@link AbortPolicy}, the handler
- * throws a runtime {@link com.example.javatest.concurrent.RejectedExecutionException} upon rejection.
+ * throws a runtime {@link RejectedExecutionException} upon rejection.
  *
  * <li>In {@link CallerRunsPolicy}, the thread
  * that invokes {@code execute} itself runs the task. This provides a
@@ -256,7 +242,7 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  * </ol>
  *
  * It is possible to define and use other kinds of {@link
- * com.example.javatest.concurrent.RejectedExecutionHandler} classes. Doing so requires some care
+ * RejectedExecutionHandler} classes. Doing so requires some care
  * especially when policies are designed to work only under particular
  * capacity or queuing policies. </dd>
  *
@@ -401,16 +387,30 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * that workerCount is 0 (which sometimes entails a recheck -- see
      * below).
      */
+    // 它的主要作用是记录线程池的生命周期状态和当前工作的线程数,将一个整型变量按二进制位分成两部分，分别表示两个信息。
+    // 高 3 位：线程池状态
+    // 低 29 位：有效的工作线程数
+    // ctlOf(RUNNING, 0) 将状态 RUNNING（高3位）和线程数 0（低29位）合并为初始值。
     private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
-    private static final int COUNT_BITS = Integer.SIZE - 3;
-    private static final int COUNT_MASK = (1 << COUNT_BITS) - 1;
+    private static final int COUNT_BITS = Integer.SIZE - 3;// 32 - 3 = 29
+    private static final int COUNT_MASK = (1 << COUNT_BITS) - 1;// 低29位掩码（0b00011111...1111）
 
     // runState is stored in the high-order bits
-    private static final int RUNNING    = -1 << COUNT_BITS;
-    private static final int SHUTDOWN   =  0 << COUNT_BITS;
-    private static final int STOP       =  1 << COUNT_BITS;
-    private static final int TIDYING    =  2 << COUNT_BITS;
-    private static final int TERMINATED =  3 << COUNT_BITS;
+    // 不可逆性：状态只能单向转换（通过数值递增实现，如 RUNNING < SHUTDOWN < STOP < TIDYING < TERMINATED）
+    // 接受新任务，处理队列中的任务
+    private static final int RUNNING    = -1 << COUNT_BITS;// 111_000...000
+
+    // 不接受新任务，但处理队列中的任务
+    private static final int SHUTDOWN   =  0 << COUNT_BITS;// 000_000...000
+
+    // 不接受新任务，不处理队列中的任务，中断正在执行的任务
+    private static final int STOP       =  1 << COUNT_BITS;// 001_000...000
+
+    // 所有任务已终止，workerCount=0，即将调用 terminated() 钩子方法
+    private static final int TIDYING    =  2 << COUNT_BITS;// 010_000...000
+
+    // terminated() 方法执行完成
+    private static final int TERMINATED =  3 << COUNT_BITS;// 011_000...000
 
     // Packing and unpacking ctl
     private static int runStateOf(int c)     { return c & ~COUNT_MASK; }
@@ -468,7 +468,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * return null even if it may later return non-null when delays
      * expire.
      */
-    private final com.example.javatest.concurrent.BlockingQueue<Runnable> workQueue;
+    private final BlockingQueue<Runnable> workQueue;
 
     /**
      * Lock held on access to workers set and related bookkeeping.
@@ -490,7 +490,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * holding mainLock.
      */
     // Android-added: 
-    
+
     private final HashSet<Worker> workers = new HashSet<>();
 
     /**
@@ -534,12 +534,12 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * will likely be enough memory available for the cleanup code to
      * complete without encountering yet another OutOfMemoryError.
      */
-    private volatile com.example.javatest.concurrent.ThreadFactory threadFactory;
+    private volatile ThreadFactory threadFactory;
 
     /**
      * Handler called when saturated or shutdown in execute.
      */
-    private volatile com.example.javatest.concurrent.RejectedExecutionHandler handler;
+    private volatile RejectedExecutionHandler handler;
 
     /**
      * Timeout in nanoseconds for idle threads waiting for work.
@@ -577,7 +577,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     /**
      * The default rejected execution handler.
      */
-    private static final com.example.javatest.concurrent.RejectedExecutionHandler defaultHandler =
+    private static final RejectedExecutionHandler defaultHandler =
         new AbortPolicy();
 
     /**
@@ -727,28 +727,31 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * allow access from ScheduledThreadPoolExecutor.
      */
     final void tryTerminate() {
-        for (;;) {
+        for (;;) {// 循环直到状态稳定
             int c = ctl.get();
-            if (isRunning(c) ||
-                runStateAtLeast(c, TIDYING) ||
-                (runStateLessThan(c, STOP) && ! workQueue.isEmpty()))
+            // 检查终止条件是否不满足
+            if (isRunning(c) ||// 1. 线程池仍在运行
+                runStateAtLeast(c, TIDYING) ||// 2. 已处于TIDYING或TERMINATED
+                (runStateLessThan(c, STOP) && ! workQueue.isEmpty()))// 3. SHUTDOWN状态且队列非空
                 return;
-            if (workerCountOf(c) != 0) { // Eligible to terminate
-                interruptIdleWorkers(ONLY_ONE);
+            // 检查是否有活跃线程
+            if (workerCountOf(c) != 0) { // Eligible to terminate// 存在其他工作线程
+                interruptIdleWorkers(ONLY_ONE); // 中断一个空闲线程（触发传播）
                 return;
             }
 
             final ReentrantLock mainLock = this.mainLock;
             mainLock.lock();
             try {
+                // 尝试将状态推进到 TIDYING
                 if (ctl.compareAndSet(c, ctlOf(TIDYING, 0))) {
                     try {
-                        terminated();
+                        terminated();// 钩子方法（子类可扩展）
                     } finally {
-                        ctl.set(ctlOf(TERMINATED, 0));
-                        termination.signalAll();
+                        ctl.set(ctlOf(TERMINATED, 0));// 最终状态设为TERMINATED
+                        termination.signalAll();// 唤醒等待线程（如awaitTermination）
                     }
-                    return;
+                    return;// 终止成功
                 }
             } finally {
                 mainLock.unlock();
@@ -869,7 +872,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * elements, it deletes them one by one.
      */
     private List<Runnable> drainQueue() {
-        com.example.javatest.concurrent.BlockingQueue<Runnable> q = workQueue;
+        BlockingQueue<Runnable> q = workQueue;
         ArrayList<Runnable> taskList = new ArrayList<>();
         q.drainTo(taskList);
         if (!q.isEmpty()) {
@@ -911,25 +914,32 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * state).
      * @return true if successful
      */
+    // 尝试创建新工作线程并启动
+    // firstTask：线程的第一个任务，可为 null
+    // core：true 使用 corePoolSize 判断线程数限制，false 使用 maximumPoolSize
     private boolean addWorker(Runnable firstTask, boolean core) {
         retry:
         for (int c = ctl.get();;) {
             // Check if queue empty only if necessary.
+            // 检查线程池状态是否允许创建线程
             if (runStateAtLeast(c, SHUTDOWN)
                 && (runStateAtLeast(c, STOP)
                     || firstTask != null
                     || workQueue.isEmpty()))
-                return false;
+                return false;// 直接拒绝创建线程
 
             for (;;) {
+                // 检查线程数是否超过限制（核心或最大线程数）
                 if (workerCountOf(c)
                     >= ((core ? corePoolSize : maximumPoolSize) & COUNT_MASK))
                     return false;
+                // CAS 增加 workerCount
                 if (compareAndIncrementWorkerCount(c))
-                    break retry;
+                    break retry;// 成功则跳出外层循环
+                // 重新读取 ctl（可能被其他线程修改）
                 c = ctl.get();  // Re-read ctl
                 if (runStateAtLeast(c, SHUTDOWN))
-                    continue retry;
+                    continue retry;// 线程池已关闭，回到外层循环重新检查状态
                 // else CAS failed due to workerCount change; retry inner loop
             }
         }
@@ -938,32 +948,33 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         boolean workerAdded = false;
         Worker w = null;
         try {
-            w = new Worker(firstTask);
+            // 创建 Worker 对象并启动线程
+            w = new Worker(firstTask);// 封装任务和线程
             final Thread t = w.thread;
             if (t != null) {
                 final ReentrantLock mainLock = this.mainLock;
-                mainLock.lock();
+                mainLock.lock();// 加锁，保证线程安全
                 try {
                     // Recheck while holding lock.
                     // Back out on ThreadFactory failure or if
                     // shut down before lock acquired.
                     int c = ctl.get();
-
+                    // 二次检查线程池状态（防止加锁期间状态变化）
                     if (isRunning(c) ||
                         (runStateLessThan(c, STOP) && firstTask == null)) {
                         if (t.getState() != Thread.State.NEW)
                             throw new IllegalThreadStateException();
-                        workers.add(w);
+                        workers.add(w);// 将 Worker 加入线程集合
                         workerAdded = true;
                         int s = workers.size();
                         if (s > largestPoolSize)
-                            largestPoolSize = s;
+                            largestPoolSize = s;// 更新历史最大线程数
                     }
                 } finally {
-                    mainLock.unlock();
+                    mainLock.unlock();// 释放锁
                 }
                 if (workerAdded) {
-                    t.start();
+                    t.start();// 启动线程
                     workerStarted = true;
                 }
             }
@@ -988,7 +999,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             if (w != null)
                 workers.remove(w);
             decrementWorkerCount();
-            tryTerminate();
+            // 触发状态检查，推进线程池生命周期。
+            tryTerminate();// 尝试终止线程池（若满足条件）
         } finally {
             mainLock.unlock();
         }
@@ -1079,7 +1091,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
             try {
                 Runnable r = timed ?
-                    workQueue.poll(keepAliveTime, com.example.javatest.concurrent.TimeUnit.NANOSECONDS) :
+                    workQueue.poll(keepAliveTime, TimeUnit.NANOSECONDS) :
                     workQueue.take();
                 if (r != null)
                     return r;
@@ -1177,11 +1189,11 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     /**
      * Creates a new {@code ThreadPoolExecutor} with the given initial
      * parameters, the
-     * {@linkplain com.example.javatest.concurrent.Executors#defaultThreadFactory default thread factory}
+     * {@linkplain Executors#defaultThreadFactory default thread factory}
      * and the {@linkplain AbortPolicy
      * default rejected execution handler}.
      *
-     * <p>It may be more convenient to use one of the {@link com.example.javatest.concurrent.Executors}
+     * <p>It may be more convenient to use one of the {@link Executors}
      * factory methods instead of this general purpose constructor.
      *
      * @param corePoolSize the number of threads to keep in the pool, even
@@ -1205,10 +1217,10 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     public ThreadPoolExecutor(int corePoolSize,
                               int maximumPoolSize,
                               long keepAliveTime,
-                              com.example.javatest.concurrent.TimeUnit unit,
-                              com.example.javatest.concurrent.BlockingQueue<Runnable> workQueue) {
+                              TimeUnit unit,
+                              BlockingQueue<Runnable> workQueue) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
-             com.example.javatest.concurrent.Executors.defaultThreadFactory(), defaultHandler);
+             Executors.defaultThreadFactory(), defaultHandler);
     }
 
     /**
@@ -1240,9 +1252,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     public ThreadPoolExecutor(int corePoolSize,
                               int maximumPoolSize,
                               long keepAliveTime,
-                              com.example.javatest.concurrent.TimeUnit unit,
-                              com.example.javatest.concurrent.BlockingQueue<Runnable> workQueue,
-                              com.example.javatest.concurrent.ThreadFactory threadFactory) {
+                              TimeUnit unit,
+                              BlockingQueue<Runnable> workQueue,
+                              ThreadFactory threadFactory) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
              threadFactory, defaultHandler);
     }
@@ -1250,7 +1262,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     /**
      * Creates a new {@code ThreadPoolExecutor} with the given initial
      * parameters and the
-     * {@linkplain com.example.javatest.concurrent.Executors#defaultThreadFactory default thread factory}.
+     * {@linkplain Executors#defaultThreadFactory default thread factory}.
      *
      * @param corePoolSize the number of threads to keep in the pool, even
      *        if they are idle, unless {@code allowCoreThreadTimeOut} is set
@@ -1276,9 +1288,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     public ThreadPoolExecutor(int corePoolSize,
                               int maximumPoolSize,
                               long keepAliveTime,
-                              com.example.javatest.concurrent.TimeUnit unit,
-                              com.example.javatest.concurrent.BlockingQueue<Runnable> workQueue,
-                              com.example.javatest.concurrent.RejectedExecutionHandler handler) {
+                              TimeUnit unit,
+                              BlockingQueue<Runnable> workQueue,
+                              RejectedExecutionHandler handler) {
         this(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,
              Executors.defaultThreadFactory(), handler);
     }
@@ -1313,10 +1325,10 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     public ThreadPoolExecutor(int corePoolSize,
                               int maximumPoolSize,
                               long keepAliveTime,
-                              com.example.javatest.concurrent.TimeUnit unit,
-                              com.example.javatest.concurrent.BlockingQueue<Runnable> workQueue,
-                              com.example.javatest.concurrent.ThreadFactory threadFactory,
-                              com.example.javatest.concurrent.RejectedExecutionHandler handler) {
+                              TimeUnit unit,
+                              BlockingQueue<Runnable> workQueue,
+                              ThreadFactory threadFactory,
+                              RejectedExecutionHandler handler) {
         if (corePoolSize < 0 ||
             maximumPoolSize <= 0 ||
             maximumPoolSize < corePoolSize ||
@@ -1338,10 +1350,10 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      *
      * If the task cannot be submitted for execution, either because this
      * executor has been shutdown or because its capacity has been reached,
-     * the task is handled by the current {@link com.example.javatest.concurrent.RejectedExecutionHandler}.
+     * the task is handled by the current {@link RejectedExecutionHandler}.
      *
      * @param command the task to execute
-     * @throws com.example.javatest.concurrent.RejectedExecutionException at discretion of
+     * @throws RejectedExecutionException at discretion of
      *         {@code RejectedExecutionHandler}, if the task
      *         cannot be accepted for execution
      * @throws NullPointerException if {@code command} is null
@@ -1370,18 +1382,23 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          * and so reject the task.
          */
         int c = ctl.get();
+        // 运行线程数小于核心线程数，尝试创建核心线程
         if (workerCountOf(c) < corePoolSize) {
             if (addWorker(command, true))
                 return;
             c = ctl.get();
         }
+        // 线程池位 Running 状态，并且将任务加入 BlockingQueue 成功
         if (isRunning(c) && workQueue.offer(command)) {
             int recheck = ctl.get();
+            // 二次检查线程池状态
             if (! isRunning(recheck) && remove(command))
+                // 若线程池已关闭，移除任务并拒绝
                 reject(command);
             else if (workerCountOf(recheck) == 0)
                 addWorker(null, false);
         }
+        // BlockingQueue 已满，创建非核心线程
         else if (!addWorker(command, false))
             reject(command);
     }
@@ -1471,7 +1488,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         return runStateAtLeast(ctl.get(), TERMINATED);
     }
 
-    public boolean awaitTermination(long timeout, com.example.javatest.concurrent.TimeUnit unit)
+    public boolean awaitTermination(long timeout, TimeUnit unit)
         throws InterruptedException {
         long nanos = unit.toNanos(timeout);
         final ReentrantLock mainLock = this.mainLock;
@@ -1511,7 +1528,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * @throws NullPointerException if threadFactory is null
      * @see #getThreadFactory
      */
-    public void setThreadFactory(com.example.javatest.concurrent.ThreadFactory threadFactory) {
+    public void setThreadFactory(ThreadFactory threadFactory) {
         if (threadFactory == null)
             throw new NullPointerException();
         this.threadFactory = threadFactory;
@@ -1521,7 +1538,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * Returns the thread factory used to create new threads.
      *
      * @return the current thread factory
-     * @see #setThreadFactory(com.example.javatest.concurrent.ThreadFactory)
+     * @see #setThreadFactory(ThreadFactory)
      */
     public ThreadFactory getThreadFactory() {
         return threadFactory;
@@ -1534,7 +1551,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * @throws NullPointerException if handler is null
      * @see #getRejectedExecutionHandler
      */
-    public void setRejectedExecutionHandler(com.example.javatest.concurrent.RejectedExecutionHandler handler) {
+    public void setRejectedExecutionHandler(RejectedExecutionHandler handler) {
         if (handler == null)
             throw new NullPointerException();
         this.handler = handler;
@@ -1544,9 +1561,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * Returns the current handler for unexecutable tasks.
      *
      * @return the current handler
-     * @see #setRejectedExecutionHandler(com.example.javatest.concurrent.RejectedExecutionHandler)
+     * @see #setRejectedExecutionHandler(RejectedExecutionHandler)
      */
-    public com.example.javatest.concurrent.RejectedExecutionHandler getRejectedExecutionHandler() {
+    public RejectedExecutionHandler getRejectedExecutionHandler() {
         return handler;
     }
 
@@ -1726,9 +1743,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * @param unit the time unit of the {@code time} argument
      * @throws IllegalArgumentException if {@code time} less than zero or
      *         if {@code time} is zero and {@code allowsCoreThreadTimeOut}
-     * @see #getKeepAliveTime(com.example.javatest.concurrent.TimeUnit)
+     * @see #getKeepAliveTime(TimeUnit)
      */
-    public void setKeepAliveTime(long time, com.example.javatest.concurrent.TimeUnit unit) {
+    public void setKeepAliveTime(long time, TimeUnit unit) {
         if (time < 0)
             throw new IllegalArgumentException();
         if (time == 0 && allowsCoreThreadTimeOut())
@@ -1750,9 +1767,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      *
      * @param unit the desired time unit of the result
      * @return the time limit
-     * @see #setKeepAliveTime(long, com.example.javatest.concurrent.TimeUnit)
+     * @see #setKeepAliveTime(long, TimeUnit)
      */
-    public long getKeepAliveTime(com.example.javatest.concurrent.TimeUnit unit) {
+    public long getKeepAliveTime(TimeUnit unit) {
         return unit.convert(keepAliveTime, TimeUnit.NANOSECONDS);
     }
 
@@ -1766,7 +1783,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      *
      * @return the task queue
      */
-    public com.example.javatest.concurrent.BlockingQueue<Runnable> getQueue() {
+    public BlockingQueue<Runnable> getQueue() {
         return workQueue;
     }
 
@@ -1793,7 +1810,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
     }
 
     /**
-     * Tries to remove from the work queue all {@link com.example.javatest.concurrent.Future}
+     * Tries to remove from the work queue all {@link Future}
      * tasks that have been cancelled. This method can be useful as a
      * storage reclamation operation, that has no other impact on
      * functionality. Cancelled tasks are never executed, but may
@@ -1808,7 +1825,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             Iterator<Runnable> it = q.iterator();
             while (it.hasNext()) {
                 Runnable r = it.next();
-                if (r instanceof com.example.javatest.concurrent.Future<?> && ((com.example.javatest.concurrent.Future<?>)r).isCancelled())
+                if (r instanceof Future<?> && ((Future<?>)r).isCancelled())
                     it.remove();
             }
         } catch (ConcurrentModificationException fallThrough) {
@@ -1816,7 +1833,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             // Make copy for traversal and call remove for cancelled entries.
             // The slow path is more likely to be O(N*N).
             for (Object r : q.toArray())
-                if (r instanceof com.example.javatest.concurrent.Future<?> && ((Future<?>)r).isCancelled())
+                if (r instanceof Future<?> && ((Future<?>)r).isCancelled())
                     q.remove(r);
         }
 
@@ -2048,7 +2065,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * unless the executor has been shut down, in which case the task
      * is discarded.
      */
-    public static class CallerRunsPolicy implements com.example.javatest.concurrent.RejectedExecutionHandler {
+    public static class CallerRunsPolicy implements RejectedExecutionHandler {
         /**
          * Creates a {@code CallerRunsPolicy}.
          */
@@ -2070,12 +2087,12 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
     /**
      * A handler for rejected tasks that throws a
-     * {@link com.example.javatest.concurrent.RejectedExecutionException}.
+     * {@link RejectedExecutionException}.
      *
      * This is the default handler for {@link ThreadPoolExecutor} and
      * {@link ScheduledThreadPoolExecutor}.
      */
-    public static class AbortPolicy implements com.example.javatest.concurrent.RejectedExecutionHandler {
+    public static class AbortPolicy implements RejectedExecutionHandler {
         /**
          * Creates an {@code AbortPolicy}.
          */
@@ -2086,7 +2103,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
          *
          * @param r the runnable task requested to be executed
          * @param e the executor attempting to execute this task
-         * @throws com.example.javatest.concurrent.RejectedExecutionException always
+         * @throws RejectedExecutionException always
          */
         public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
             throw new RejectedExecutionException("Task " + r.toString() +
@@ -2099,7 +2116,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      * A handler for rejected tasks that silently discards the
      * rejected task.
      */
-    public static class DiscardPolicy implements com.example.javatest.concurrent.RejectedExecutionHandler {
+    public static class DiscardPolicy implements RejectedExecutionHandler {
         /**
          * Creates a {@code DiscardPolicy}.
          */

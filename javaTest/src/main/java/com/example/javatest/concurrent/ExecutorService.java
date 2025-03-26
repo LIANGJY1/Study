@@ -223,7 +223,7 @@ public interface ExecutorService extends Executor {
      * <p>Note: The {@link Executors} class includes a set of methods
      * that can convert some other common closure-like objects,
      * for example, {@link java.security.PrivilegedAction} to
-     * {@link com.example.javatest.concurrent.Callable} form so they can be submitted.
+     * {@link Callable} form so they can be submitted.
      *
      * @param task the task to submit
      * @param <T> the type of the task's result
@@ -232,7 +232,7 @@ public interface ExecutorService extends Executor {
      *         scheduled for execution
      * @throws NullPointerException if the task is null
      */
-    <T> Future<T> submit(com.example.javatest.concurrent.Callable<T> task);
+    <T> Future<T> submit(Callable<T> task);
 
     /**
      * Submits a Runnable task for execution and returns a Future
@@ -283,7 +283,7 @@ public interface ExecutorService extends Executor {
      * @throws RejectedExecutionException if any task cannot be
      *         scheduled for execution
      */
-    <T> List<Future<T>> invokeAll(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks)
+    <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
         throws InterruptedException;
 
     /**
@@ -314,7 +314,7 @@ public interface ExecutorService extends Executor {
      * @throws RejectedExecutionException if any task cannot be scheduled
      *         for execution
      */
-    <T> List<Future<T>> invokeAll(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks,
+    <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
                                   long timeout, TimeUnit unit)
         throws InterruptedException;
 
@@ -337,7 +337,7 @@ public interface ExecutorService extends Executor {
      * @throws RejectedExecutionException if tasks cannot be scheduled
      *         for execution
      */
-    <T> T invokeAny(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks)
+    <T> T invokeAny(Collection<? extends Callable<T>> tasks)
         throws InterruptedException, ExecutionException;
 
     /**

@@ -382,7 +382,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
      * @throws InterruptedException {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
      */
-    public boolean offer(E e, long timeout, com.example.javatest.concurrent.TimeUnit unit)
+    public boolean offer(E e, long timeout, TimeUnit unit)
         throws InterruptedException {
 
         Objects.requireNonNull(e);

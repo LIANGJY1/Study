@@ -38,7 +38,7 @@ package com.example.javatest.concurrent;
 import com.example.javatest.concurrent.ForkJoinTask;
 
 /**
- * A recursive resultless {@link com.example.javatest.concurrent.ForkJoinTask}.  This class
+ * A recursive resultless {@link ForkJoinTask}.  This class
  * establishes conventions to parameterize resultless actions as
  * {@code Void} {@code ForkJoinTask}s. Because {@code null} is the
  * only valid value of type {@code Void}, methods such as {@code join}

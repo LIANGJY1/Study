@@ -207,7 +207,7 @@ import com.example.javatest.concurrent.locks.LockSupport;
  * overwhelm processing.
  *
  * <p>This class provides {@code adapt} methods for {@link Runnable}
- * and {@link com.example.javatest.concurrent.Callable}, that may be of use when mixing execution of
+ * and {@link Callable}, that may be of use when mixing execution of
  * {@code ForkJoinTasks} with other kinds of tasks. When all tasks are
  * of this form, consider using a pool constructed in <em>asyncMode</em>.
  *
@@ -1433,7 +1433,7 @@ public abstract class ForkJoinTask<V> implements Future<V>, Serializable {
     static final class AdaptedCallable<T> extends ForkJoinTask<T>
         implements RunnableFuture<T> {
         @SuppressWarnings("serial") // Conditionally serializable
-        final com.example.javatest.concurrent.Callable<? extends T> callable;
+        final Callable<? extends T> callable;
         @SuppressWarnings("serial") // Conditionally serializable
         T result;
         AdaptedCallable(com.example.javatest.concurrent.Callable<? extends T> callable) {

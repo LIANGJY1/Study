@@ -55,10 +55,10 @@ import com.example.javatest.concurrent.TimeUnit;
 import com.example.javatest.concurrent.TimeoutException;
 
 /**
- * Provides default implementations of {@link com.example.javatest.concurrent.ExecutorService}
+ * Provides default implementations of {@link ExecutorService}
  * execution methods. This class implements the {@code submit},
  * {@code invokeAny} and {@code invokeAll} methods using a
- * {@link com.example.javatest.concurrent.RunnableFuture} returned by {@code newTaskFor}, which defaults
+ * {@link RunnableFuture} returned by {@code newTaskFor}, which defaults
  * to the {@link FutureTask} class provided in this package.  For example,
  * the implementation of {@code submit(Runnable)} creates an
  * associated {@code RunnableFuture} that is executed and
@@ -106,7 +106,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
      * the underlying task
      * @since 1.6
      */
-    protected <T> com.example.javatest.concurrent.RunnableFuture<T> newTaskFor(Runnable runnable, T value) {
+    protected <T> RunnableFuture<T> newTaskFor(Runnable runnable, T value) {
         return new FutureTask<T>(runnable, value);
     }
 
@@ -121,7 +121,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
      * cancellation of the underlying task
      * @since 1.6
      */
-    protected <T> com.example.javatest.concurrent.RunnableFuture<T> newTaskFor(com.example.javatest.concurrent.Callable<T> callable) {
+    protected <T> RunnableFuture<T> newTaskFor(Callable<T> callable) {
         return new FutureTask<T>(callable);
     }
 
@@ -129,9 +129,9 @@ public abstract class AbstractExecutorService implements ExecutorService {
      * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public com.example.javatest.concurrent.Future<?> submit(Runnable task) {
+    public Future<?> submit(Runnable task) {
         if (task == null) throw new NullPointerException();
-        com.example.javatest.concurrent.RunnableFuture<Void> ftask = newTaskFor(task, null);
+        RunnableFuture<Void> ftask = newTaskFor(task, null);
         execute(ftask);
         return ftask;
     }
@@ -140,9 +140,9 @@ public abstract class AbstractExecutorService implements ExecutorService {
      * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public <T> com.example.javatest.concurrent.Future<T> submit(Runnable task, T result) {
+    public <T> Future<T> submit(Runnable task, T result) {
         if (task == null) throw new NullPointerException();
-        com.example.javatest.concurrent.RunnableFuture<T> ftask = newTaskFor(task, result);
+        RunnableFuture<T> ftask = newTaskFor(task, result);
         execute(ftask);
         return ftask;
     }
@@ -151,9 +151,9 @@ public abstract class AbstractExecutorService implements ExecutorService {
      * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public <T> com.example.javatest.concurrent.Future<T> submit(com.example.javatest.concurrent.Callable<T> task) {
+    public <T> Future<T> submit(Callable<T> task) {
         if (task == null) throw new NullPointerException();
-        com.example.javatest.concurrent.RunnableFuture<T> ftask = newTaskFor(task);
+        RunnableFuture<T> ftask = newTaskFor(task);
         execute(ftask);
         return ftask;
     }
@@ -161,7 +161,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
     /**
      * the main mechanics of invokeAny.
      */
-    private <T> T doInvokeAny(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks,
+    private <T> T doInvokeAny(Collection<? extends Callable<T>> tasks,
                               boolean timed, long nanos)
         throws InterruptedException, ExecutionException, TimeoutException {
         if (tasks == null)
@@ -169,7 +169,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
         int ntasks = tasks.size();
         if (ntasks == 0)
             throw new IllegalArgumentException();
-        ArrayList<com.example.javatest.concurrent.Future<T>> futures = new ArrayList<>(ntasks);
+        ArrayList<Future<T>> futures = new ArrayList<>(ntasks);
         ExecutorCompletionService<T> ecs =
             new ExecutorCompletionService<T>(this);
 
@@ -184,7 +184,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
             // result, we can throw the last exception we got.
             ExecutionException ee = null;
             final long deadline = timed ? System.nanoTime() + nanos : 0L;
-            Iterator<? extends com.example.javatest.concurrent.Callable<T>> it = tasks.iterator();
+            Iterator<? extends Callable<T>> it = tasks.iterator();
 
             // Start one task for sure; the rest incrementally
             futures.add(ecs.submit(it.next()));
@@ -192,7 +192,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
             int active = 1;
 
             for (;;) {
-                com.example.javatest.concurrent.Future<T> f = ecs.poll();
+                Future<T> f = ecs.poll();
                 if (f == null) {
                     if (ntasks > 0) {
                         --ntasks;
@@ -231,7 +231,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
         }
     }
 
-    public <T> T invokeAny(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks)
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
         throws InterruptedException, ExecutionException {
         try {
             return doInvokeAny(tasks, false, 0);
@@ -241,25 +241,25 @@ public abstract class AbstractExecutorService implements ExecutorService {
         }
     }
 
-    public <T> T invokeAny(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks,
+    public <T> T invokeAny(Collection<? extends Callable<T>> tasks,
                            long timeout, TimeUnit unit)
         throws InterruptedException, ExecutionException, TimeoutException {
         return doInvokeAny(tasks, true, unit.toNanos(timeout));
     }
 
-    public <T> List<com.example.javatest.concurrent.Future<T>> invokeAll(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks)
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
         throws InterruptedException {
         if (tasks == null)
             throw new NullPointerException();
-        ArrayList<com.example.javatest.concurrent.Future<T>> futures = new ArrayList<>(tasks.size());
+        ArrayList<Future<T>> futures = new ArrayList<>(tasks.size());
         try {
-            for (com.example.javatest.concurrent.Callable<T> t : tasks) {
+            for (Callable<T> t : tasks) {
                 RunnableFuture<T> f = newTaskFor(t);
                 futures.add(f);
                 execute(f);
             }
             for (int i = 0, size = futures.size(); i < size; i++) {
-                com.example.javatest.concurrent.Future<T> f = futures.get(i);
+                Future<T> f = futures.get(i);
                 if (!f.isDone()) {
                     try { f.get(); }
                     catch (CancellationException | ExecutionException ignore) {}
@@ -272,14 +272,14 @@ public abstract class AbstractExecutorService implements ExecutorService {
         }
     }
 
-    public <T> List<com.example.javatest.concurrent.Future<T>> invokeAll(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks,
+    public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
                                                               long timeout, TimeUnit unit)
         throws InterruptedException {
         if (tasks == null)
             throw new NullPointerException();
         final long nanos = unit.toNanos(timeout);
         final long deadline = System.nanoTime() + nanos;
-        ArrayList<com.example.javatest.concurrent.Future<T>> futures = new ArrayList<>(tasks.size());
+        ArrayList<Future<T>> futures = new ArrayList<>(tasks.size());
         int j = 0;
         timedOut: try {
             for (Callable<T> t : tasks)
@@ -296,7 +296,7 @@ public abstract class AbstractExecutorService implements ExecutorService {
             }
 
             for (; j < size; j++) {
-                com.example.javatest.concurrent.Future<T> f = futures.get(j);
+                Future<T> f = futures.get(j);
                 if (!f.isDone()) {
                     try { f.get(deadline - System.nanoTime(), NANOSECONDS); }
                     catch (CancellationException | ExecutionException ignore) {}

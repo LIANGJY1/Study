@@ -910,7 +910,7 @@ public class ReentrantReadWriteLock
          *
          * @throws UnsupportedOperationException always
          */
-        public com.example.javatest.concurrent.locks.Condition newCondition() {
+        public Condition newCondition() {
             throw new UnsupportedOperationException();
         }
 

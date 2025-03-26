@@ -38,7 +38,7 @@ package com.example.javatest.concurrent;
 import com.example.javatest.concurrent.ForkJoinTask;
 
 /**
- * A recursive result-bearing {@link com.example.javatest.concurrent.ForkJoinTask}.
+ * A recursive result-bearing {@link ForkJoinTask}.
  *
  * <p>For a classic example, here is a task computing Fibonacci numbers:
  *
