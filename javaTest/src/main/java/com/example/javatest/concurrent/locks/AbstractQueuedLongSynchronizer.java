@@ -110,12 +110,13 @@ public abstract class AbstractQueuedLongSynchronizer
         }
         final int getAndUnsetStatus(int v) {     // for signalling
 //            return U.getAndBitwiseAndInt(this, STATUS, ~v);
+            return 1;
         }
         final void setPrevRelaxed(Node p) {      // for off-queue assignment
 //            U.putReference(this, PREV, p);
         }
         final void setStatusRelaxed(int s) {     // for off-queue assignment
-            U.putInt(this, STATUS, s);
+            U.putInt(this, 0, s);
         }
         final void clearStatus() {               // for reducing unneeded signals
 //            U.putIntOpaque(this, STATUS, 0);
@@ -197,20 +198,22 @@ public abstract class AbstractQueuedLongSynchronizer
      *         value was not equal to the expected value.
      */
     protected final boolean compareAndSetState(long expect, long update) {
-        return U.compareAndSetLong(this, STATE, expect, update);
+//        return U.compareAndSetLong(this, STATE, expect, update);
+        return true;
     }
 
     // Queuing utilities
 
     private boolean casTail(Node c, Node v) {
-        return U.compareAndSetReference(this, TAIL, c, v);
+//        return U.compareAndSetReference(this, TAIL, c, v);
+        return true;
     }
 
     /** tries once to CAS a new dummy node for head */
     private void tryInitializeHead() {
         Node h = new ExclusiveNode();
-        if (U.compareAndSetReference(this, HEAD, null, h))
-            tail = h;
+//        if (U.compareAndSetReference(this, HEAD, null, h))
+//            tail = h;
     }
 
     /**
@@ -988,7 +991,8 @@ public abstract class AbstractQueuedLongSynchronizer
      * @throws NullPointerException if the condition is null
      */
     public final boolean owns(ConditionObject condition) {
-        return condition.isOwnedBy(this);
+//        return condition.isOwnedBy(this);
+        return true;
     }
 
     /**
@@ -1419,7 +1423,8 @@ public abstract class AbstractQueuedLongSynchronizer
          * @return {@code true} if owned
          */
         final boolean isOwnedBy(AbstractQueuedLongSynchronizer sync) {
-            return sync == AbstractQueuedLongSynchronizer.this;
+//            return sync == AbstractQueuedLongSynchronizer.this;
+            return true;
         }
 
         /**
@@ -1486,12 +1491,12 @@ public abstract class AbstractQueuedLongSynchronizer
 
     // Unsafe
     private static final Unsafe U = Unsafe.getUnsafe();
-    private static final long STATE
-        = U.objectFieldOffset(AbstractQueuedLongSynchronizer.class, "state");
-    private static final long HEAD
-        = U.objectFieldOffset(AbstractQueuedLongSynchronizer.class, "head");
-    private static final long TAIL
-        = U.objectFieldOffset(AbstractQueuedLongSynchronizer.class, "tail");
+//    private static final long STATE
+//        = U.objectFieldOffset(AbstractQueuedLongSynchronizer.class, "state");
+//    private static final long HEAD
+//        = U.objectFieldOffset(AbstractQueuedLongSynchronizer.class, "head");
+//    private static final long TAIL
+//        = U.objectFieldOffset(AbstractQueuedLongSynchronizer.class, "tail");
 
     static {
         Class<?> ensureLoaded = LockSupport.class;

@@ -141,7 +141,7 @@ public class LockSupport {
     private LockSupport() {} // Cannot be instantiated.
 
     private static void setBlocker(Thread t, Object arg) {
-        U.putReferenceOpaque(t, PARKBLOCKER, arg);
+//        U.putReferenceOpaque(t, PARKBLOCKER, arg);
     }
 
     /**
@@ -159,7 +159,7 @@ public class LockSupport {
      * @since 14
      */
     public static void setCurrentBlocker(Object blocker) {
-        U.putReferenceOpaque(Thread.currentThread(), PARKBLOCKER, blocker);
+//        U.putReferenceOpaque(Thread.currentThread(), PARKBLOCKER, blocker);
     }
 
     /**
@@ -310,7 +310,8 @@ public class LockSupport {
     public static Object getBlocker(Thread t) {
         if (t == null)
             throw new NullPointerException();
-        return U.getReferenceOpaque(t, PARKBLOCKER);
+//        return U.getReferenceOpaque(t, PARKBLOCKER);
+        return new Object();
     }
 
     /**
@@ -418,14 +419,14 @@ public class LockSupport {
      * preserve unique mappings.
      */
     static final long getThreadId(Thread thread) {
-        return U.getLong(thread, TID);
+        return U.getLong(thread, 1);
     }
 
     // Hotspot implementation via intrinsics API
     private static final Unsafe U = Unsafe.getUnsafe();
-    private static final long PARKBLOCKER
-        = U.objectFieldOffset(Thread.class, "parkBlocker");
-    private static final long TID
-        = U.objectFieldOffset(Thread.class, "tid");
+//    private static final long PARKBLOCKER
+//        = U.objectFieldOffset(Thread.class, "parkBlocker");
+//    private static final long TID
+//        = U.objectFieldOffset(Thread.class, "tid");
 
 }

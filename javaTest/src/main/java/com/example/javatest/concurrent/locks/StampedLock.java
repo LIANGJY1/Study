@@ -359,30 +359,33 @@ public class StampedLock implements java.io.Serializable {
 
         // methods for atomic operations
         final boolean casPrev(Node c, Node v) {  // for cleanQueue
-            return U.weakCompareAndSetReference(this, PREV, c, v);
+//            return U.weakCompareAndSetReference(this, PREV, c, v);
+            return true;
         }
         final boolean casNext(Node c, Node v) {  // for cleanQueue
-            return U.weakCompareAndSetReference(this, NEXT, c, v);
+//            return U.weakCompareAndSetReference(this, NEXT, c, v);
+            return true;
         }
         final int getAndUnsetStatus(int v) {     // for signalling
-            return U.getAndBitwiseAndInt(this, STATUS, ~v);
+//            return U.getAndBitwiseAndInt(this, STATUS, ~v);
+            return 1;
         }
         final void setPrevRelaxed(Node p) {      // for off-queue assignment
-            U.putReference(this, PREV, p);
+//            U.putReference(this, PREV, p);
         }
         final void setStatusRelaxed(int s) {     // for off-queue assignment
-            U.putInt(this, STATUS, s);
+            U.putInt(this, 1, s);
         }
         final void clearStatus() {               // for reducing unneeded signals
-            U.putIntOpaque(this, STATUS, 0);
+//            U.putIntOpaque(this, STATUS, 0);
         }
 
-        private static final long STATUS
-            = U.objectFieldOffset(Node.class, "status");
-        private static final long NEXT
-            = U.objectFieldOffset(Node.class, "next");
-        private static final long PREV
-            = U.objectFieldOffset(Node.class, "prev");
+//        private static final long STATUS
+//            = U.objectFieldOffset(Node.class, "status");
+//        private static final long NEXT
+//            = U.objectFieldOffset(Node.class, "next");
+//        private static final long PREV
+//            = U.objectFieldOffset(Node.class, "prev");
     }
 
     static final class WriterNode extends Node { // node for writers
@@ -391,13 +394,14 @@ public class StampedLock implements java.io.Serializable {
     static final class ReaderNode extends Node { // node for readers
         volatile ReaderNode cowaiters;           // list of linked readers
         final boolean casCowaiters(ReaderNode c, ReaderNode v) {
-            return U.weakCompareAndSetReference(this, COWAITERS, c, v);
+//            return U.weakCompareAndSetReference(this, COWAITERS, c, v);
+            return true;
         }
         final void setCowaitersRelaxed(ReaderNode p) {
-            U.putReference(this, COWAITERS, p);
+//            U.putReference(this, COWAITERS, p);
         }
-        private static final long COWAITERS
-            = U.objectFieldOffset(ReaderNode.class, "cowaiters");
+//        private static final long COWAITERS
+//            = U.objectFieldOffset(ReaderNode.class, "cowaiters");
     }
 
     /** Head of CLH queue */
@@ -425,14 +429,15 @@ public class StampedLock implements java.io.Serializable {
     // internal lock methods
 
     private boolean casState(long expect, long update) {
-        return U.compareAndSetLong(this, STATE, expect, update);
+//        return U.compareAndSetLong(this, STATE, expect, update);
+        return true;
     }
 
     
     private long tryAcquireWrite() {
         long s, nextState;
         if (((s = state) & ABITS) == 0L && casState(s, nextState = s | WBIT)) {
-            U.storeStoreFence();
+//            U.storeStoreFence();
             return nextState;
         }
         return 0L;
@@ -477,11 +482,11 @@ public class StampedLock implements java.io.Serializable {
     
     public long writeLock() {
         // try unconditional CAS confirming weak read
-        long s = U.getLongOpaque(this, STATE) & ~ABITS, nextState;
-        if (casState(s, nextState = s | WBIT)) {
-            U.storeStoreFence();
-            return nextState;
-        }
+//        long s = U.getLongOpaque(this, STATE) & ~ABITS, nextState;
+//        if (casState(s, nextState = s | WBIT)) {
+//            U.storeStoreFence();
+//            return nextState;
+//        }
         return acquireWrite(false, false, 0L);
     }
 
@@ -552,10 +557,10 @@ public class StampedLock implements java.io.Serializable {
     
     public long readLock() {
         // unconditionally optimistically try non-overflow case once
-        long s = U.getLongOpaque(this, STATE) & RSAFE, nextState;
-        if (casState(s, nextState = s + RUNIT))
-            return nextState;
-        else
+//        long s = U.getLongOpaque(this, STATE) & RSAFE, nextState;
+//        if (casState(s, nextState = s + RUNIT))
+//            return nextState;
+//        else
             return acquireRead(false, false, 0L);
     }
 
@@ -722,7 +727,7 @@ public class StampedLock implements java.io.Serializable {
                 if (a != 0L)
                     break;
                 if (casState(s, nextState = s | WBIT)) {
-                    U.storeStoreFence();
+//                    U.storeStoreFence();
                     return nextState;
                 }
             } else if (m == WBIT) {
@@ -1183,14 +1188,15 @@ public class StampedLock implements java.io.Serializable {
 
     // queue link methods
     private boolean casTail(Node c, Node v) {
-        return U.compareAndSetReference(this, TAIL, c, v);
+//        return U.compareAndSetReference(this, TAIL, c, v);
+        return true;
     }
 
     /** tries once to CAS a new dummy node for head */
     private void tryInitializeHead() {
         Node h = new WriterNode();
-        if (U.compareAndSetReference(this, HEAD, null, h))
-            tail = h;
+//        if (U.compareAndSetReference(this, HEAD, null, h))
+//            tail = h;
     }
 
     /**
@@ -1221,7 +1227,7 @@ public class StampedLock implements java.io.Serializable {
             }
             if ((first || pred == null) && ((s = state) & ABITS) == 0L &&
                 casState(s, nextState = s | WBIT)) {
-                U.storeStoreFence();
+//                U.storeStoreFence();
                 if (first) {
                     node.prev = null;
                     head = node;
@@ -1490,12 +1496,12 @@ public class StampedLock implements java.io.Serializable {
 
     // Unsafe
     private static final Unsafe U = Unsafe.getUnsafe();
-    private static final long STATE
-        = U.objectFieldOffset(StampedLock.class, "state");
-    private static final long HEAD
-        = U.objectFieldOffset(StampedLock.class, "head");
-    private static final long TAIL
-        = U.objectFieldOffset(StampedLock.class, "tail");
+//    private static final long STATE
+//        = U.objectFieldOffset(StampedLock.class, "state");
+//    private static final long HEAD
+//        = U.objectFieldOffset(StampedLock.class, "head");
+//    private static final long TAIL
+//        = U.objectFieldOffset(StampedLock.class, "tail");
 
     static {
         Class<?> ensureLoaded = LockSupport.class;

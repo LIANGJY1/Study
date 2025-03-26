@@ -300,9 +300,9 @@ public class PriorityBlockingQueue<E> extends AbstractQueue<E>
                 int growth = (oldCap < 64)
                     ? (oldCap + 2) // grow faster if small
                     : (oldCap >> 1);
-                int newCap = ArraysSupport.newLength(oldCap, 1, growth);
-                if (queue == array)
-                    newArray = new Object[newCap];
+//                int newCap = ArraysSupport.newLength(oldCap, 1, growth);
+//                if (queue == array)
+//                    newArray = new Object[newCap];
             } finally {
                 allocationSpinLock = 0;
             }
@@ -927,7 +927,7 @@ public class PriorityBlockingQueue<E> extends AbstractQueue<E>
         try {
             s.defaultReadObject();
             int sz = q.size();
-            SharedSecrets.getJavaObjectInputStreamAccess().checkArray(s, Object[].class, sz);
+//            SharedSecrets.getJavaObjectInputStreamAccess().checkArray(s, Object[].class, sz);
             this.queue = new Object[Math.max(1, sz)];
             comparator = q.comparator();
             addAll(q);
