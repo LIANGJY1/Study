@@ -38,9 +38,9 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     protected void afterSetContentView() {
         super.afterSetContentView();
         initializeActivity();
-//        RxJavaUtil.test2();
+        RxJavaUtil.test2();
 //        ApkUtil.test(MainActivity.this);
-        ApkUtil.test1();
+//        ApkUtil.test1();
     }
 
     @Override

@@ -4,24 +4,28 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
 import com.liang.log.MLog;
+import com.liang.rxjava3.core.Observable;
+import com.liang.rxjava3.core.ObservableEmitter;
+import com.liang.rxjava3.core.ObservableOnSubscribe;
+import com.liang.rxjava3.core.Scheduler;
+import com.liang.rxjava3.functions.Function;
+import com.liang.rxjava3.plugins.RxJavaPlugins;
+import com.liang.rxjava3.schedulers.Schedulers;
 
 import java.util.ArrayList;
+import java.util.concurrent.ThreadPoolExecutor;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.Scheduler;
-import io.reactivex.functions.Function;
-import io.reactivex.plugins.RxJavaPlugins;
-import io.reactivex.schedulers.Schedulers;
 
 public class RxJavaUtil {
 
-    private static String TAG = "Rxjava ";
+    private static String TAG = "Rxjava, ";
 
     public static void test1() {
+
+
         // 创建一个 Observable，创建一个 Observer
-        // observable.subscribe(observer) 时，会直接触发 Observable ObservableOnSubscribe subscribe
+        // observable.subscribe(observer) 时，会直接触发 Observable ObservableOnSubscribe subscribe\
+
 
         // 1. 创建了 ObservableCreate 对象，ObservableCreate 持有 ObservableOnSubscribe 对象
         Observable<Integer> observable = Observable.create(new ObservableOnSubscribe<Integer>() {
@@ -75,6 +79,9 @@ public class RxJavaUtil {
         observable.observeOn(Schedulers.io())
                // .subscribeOn(Schedulers.io())
                 .subscribe(v -> MLog.i(TAG + "onnext " + Thread.currentThread().getName()));
+
+//        ThreadPoolExecutor executor = new ThreadPoolExecutor();
+//        executor.execute();
     }
 
 
