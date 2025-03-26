@@ -20,3 +20,5 @@ rootProject.name = "Study"
 include ':app'
 include ':javaTest'
 include ':studySDK'
+include ':rxjava'
+include ':rxjava'

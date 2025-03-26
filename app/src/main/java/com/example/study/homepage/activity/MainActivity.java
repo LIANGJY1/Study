@@ -24,7 +24,11 @@ import com.example.study.pattern.singleton.Person;
 import com.example.study.service.ServiceTestActivity;
 import com.example.study.util.tool.LogUtil;
 import com.example.study.viewDemo.ViewDemoActivity;
+import com.example.studysdk.util.ApkUtil;
+import com.example.studysdk.util.RxJavaUtil;
 import com.liang.log.MLog;
+
+import org.json.JSONException;
 
 public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBinding> {
 
@@ -34,6 +38,9 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     protected void afterSetContentView() {
         super.afterSetContentView();
         initializeActivity();
+//        RxJavaUtil.test2();
+//        ApkUtil.test(MainActivity.this);
+        ApkUtil.test1();
     }
 
     @Override
