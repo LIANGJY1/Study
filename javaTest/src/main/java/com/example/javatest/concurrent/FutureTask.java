@@ -37,15 +37,6 @@ package com.example.javatest.concurrent;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.VarHandle;
-import com.example.javatest.concurrent.Callable;
-import com.example.javatest.concurrent.CancellationException;
-import com.example.javatest.concurrent.ExecutionException;
-import com.example.javatest.concurrent.Executor;
-import com.example.javatest.concurrent.Executors;
-import com.example.javatest.concurrent.Future;
-import com.example.javatest.concurrent.RunnableFuture;
-import com.example.javatest.concurrent.TimeUnit;
-import com.example.javatest.concurrent.TimeoutException;
 import com.example.javatest.concurrent.locks.LockSupport;
 
 /**
@@ -59,7 +50,7 @@ import com.example.javatest.concurrent.locks.LockSupport;
  * or cancelled (unless the computation is invoked using
  * {@link #runAndReset}).
  *
- * <p>A {@code FutureTask} can be used to wrap a {@link com.example.javatest.concurrent.Callable} or
+ * <p>A {@code FutureTask} can be used to wrap a {@link Callable} or
  * {@link Runnable} object.  Because {@code FutureTask} implements
  * {@code Runnable}, a {@code FutureTask} can be submitted to an
  * {@link Executor} for execution.
@@ -108,7 +99,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
     private static final int INTERRUPTED  = 6;
 
     /** The underlying callable; nulled out after running */
-    private com.example.javatest.concurrent.Callable<V> callable;
+    private Callable<V> callable;
     /** The result to return or exception to throw from get() */
     private Object outcome; // non-volatile, protected by state reads/writes
     /** The thread running the callable; CASed during run() */
@@ -127,7 +118,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
         if (s == NORMAL)
             return (V)x;
         if (s >= CANCELLED)
-            throw new com.example.javatest.concurrent.CancellationException();
+            throw new CancellationException();
         throw new ExecutionException((Throwable)x);
     }
 
@@ -138,7 +129,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
      * @param  callable the callable task
      * @throws NullPointerException if the callable is null
      */
-    public FutureTask(com.example.javatest.concurrent.Callable<V> callable) {
+    public FutureTask(Callable<V> callable) {
         if (callable == null)
             throw new NullPointerException();
         this.callable = callable;
@@ -157,8 +148,10 @@ public class FutureTask<V> implements RunnableFuture<V> {
      * {@code Future<?> f = new FutureTask<Void>(runnable, null)}
      * @throws NullPointerException if the runnable is null
      */
+    // FutureTask 是 RunnableFuture 的唯一标准实现。
     public FutureTask(Runnable runnable, V result) {
-        this.callable = Executors.callable(runnable, result);
+        this.callable = Executors.callable(runnable, result);// 将 Runnable 包装成 Callable 对象
+        // 初始化任务状态为 NEW（表示任务未开始）
         this.state = NEW;       // ensure visibility of callable
     }
 
@@ -191,7 +184,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
     }
 
     /**
-     * @throws com.example.javatest.concurrent.CancellationException {@inheritDoc}
+     * @throws CancellationException {@inheritDoc}
      */
     public V get() throws InterruptedException, ExecutionException {
         int s = state;
@@ -204,7 +197,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
      * @throws CancellationException {@inheritDoc}
      */
     public V get(long timeout, TimeUnit unit)
-        throws InterruptedException, ExecutionException, com.example.javatest.concurrent.TimeoutException {
+        throws InterruptedException, ExecutionException, TimeoutException {
         if (unit == null)
             throw new NullPointerException();
         int s = state;
@@ -265,7 +258,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
             !RUNNER.compareAndSet(this, null, Thread.currentThread()))
             return;
         try {
-            com.example.javatest.concurrent.Callable<V> c = callable;
+            Callable<V> c = callable;
             if (c != null && state == NEW) {
                 V result;
                 boolean ran;

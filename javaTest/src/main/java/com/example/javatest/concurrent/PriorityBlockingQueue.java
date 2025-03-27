@@ -48,9 +48,6 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.SortedSet;
 import java.util.Spliterator;
-import com.example.javatest.concurrent.BlockingQueue;
-
-import com.example.javatest.concurrent.TimeUnit;
 import com.example.javatest.concurrent.locks.Condition;
 import com.example.javatest.concurrent.locks.ReentrantLock;
 import java.util.function.Consumer;
@@ -60,7 +57,7 @@ import java.util.function.Predicate;
 
 
 /**
- * An unbounded {@linkplain com.example.javatest.concurrent.BlockingQueue blocking queue} that uses
+ * An unbounded {@linkplain BlockingQueue blocking queue} that uses
  * the same ordering rules as class {@link PriorityQueue} and supplies
  * blocking retrieval operations.  While this queue is logically
  * unbounded, attempted additions may fail due to resource exhaustion
@@ -116,8 +113,9 @@ import java.util.function.Predicate;
  * @param <E> the type of elements held in this queue
  */
 @SuppressWarnings("unchecked")
+// 一个具有优先级的无限阻塞队列。
 public class PriorityBlockingQueue<E> extends AbstractQueue<E>
-    implements com.example.javatest.concurrent.BlockingQueue<E>, java.io.Serializable {
+    implements BlockingQueue<E>, java.io.Serializable {
     private static final long serialVersionUID = 5595510919245408276L;
 
     /*
@@ -513,13 +511,13 @@ public class PriorityBlockingQueue<E> extends AbstractQueue<E>
      * @param timeout This parameter is ignored as the method never blocks
      * @param unit This parameter is ignored as the method never blocks
      * @return {@code true} (as specified by
-     *  {@link BlockingQueue#offer(Object,long, com.example.javatest.concurrent.TimeUnit) BlockingQueue.offer})
+     *  {@link BlockingQueue#offer(Object,long, TimeUnit) BlockingQueue.offer})
      * @throws ClassCastException if the specified element cannot be compared
      *         with elements currently in the priority queue according to the
      *         priority queue's ordering
      * @throws NullPointerException if the specified element is null
      */
-    public boolean offer(E e, long timeout, com.example.javatest.concurrent.TimeUnit unit) {
+    public boolean offer(E e, long timeout, TimeUnit unit) {
         return offer(e); // never need to block
     }
 

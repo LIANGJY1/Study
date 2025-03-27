@@ -90,6 +90,8 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  * @author Doug Lea and Bill Scherer and Michael Scott
  * @param <E> the type of elements held in this queue
  */
+// 一个不存储元素的阻塞队列。每个插入操作必须等到另一个线程调用移除操作，否则插入操作一直处于阻塞状态，吞吐量通常要高于Linked-BlockingQueue，静态工
+// 厂方法Executors.newCachedThreadPool使用了这个队列
 public class SynchronousQueue<E> extends AbstractQueue<E>
     implements BlockingQueue<E>, java.io.Serializable {
     private static final long serialVersionUID = -3223113410248163686L;

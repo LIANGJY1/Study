@@ -44,21 +44,6 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.List;
-import com.example.javatest.concurrent.Callable;
-import com.example.javatest.concurrent.ExecutionException;
-import com.example.javatest.concurrent.Executor;
-import com.example.javatest.concurrent.ExecutorService;
-import com.example.javatest.concurrent.ForkJoinPool;
-import com.example.javatest.concurrent.Future;
-import com.example.javatest.concurrent.LinkedBlockingQueue;
-import com.example.javatest.concurrent.ScheduledExecutorService;
-import com.example.javatest.concurrent.ScheduledFuture;
-import com.example.javatest.concurrent.ScheduledThreadPoolExecutor;
-import com.example.javatest.concurrent.SynchronousQueue;
-import com.example.javatest.concurrent.ThreadFactory;
-import com.example.javatest.concurrent.ThreadPoolExecutor;
-import com.example.javatest.concurrent.TimeUnit;
-import com.example.javatest.concurrent.TimeoutException;
 import com.example.javatest.concurrent.atomic.AtomicInteger;
 
 
@@ -69,12 +54,12 @@ import com.example.javatest.concurrent.atomic.AtomicInteger;
 
 /**
  * Factory and utility methods for {@link Executor}, {@link
- * com.example.javatest.concurrent.ExecutorService}, {@link ScheduledExecutorService}, {@link
- * ThreadFactory}, and {@link com.example.javatest.concurrent.Callable} classes defined in this
+ * ExecutorService}, {@link ScheduledExecutorService}, {@link
+ * ThreadFactory}, and {@link Callable} classes defined in this
  * package. This class supports the following kinds of methods:
  *
  * <ul>
- *   <li>Methods that create and return an {@link com.example.javatest.concurrent.ExecutorService}
+ *   <li>Methods that create and return an {@link ExecutorService}
  *       set up with commonly useful configuration settings.
  *   <li>Methods that create and return a {@link ScheduledExecutorService}
  *       set up with commonly useful configuration settings.
@@ -83,7 +68,7 @@ import com.example.javatest.concurrent.atomic.AtomicInteger;
  *       inaccessible.
  *   <li>Methods that create and return a {@link ThreadFactory}
  *       that sets newly created threads to a known state.
- *   <li>Methods that create and return a {@link com.example.javatest.concurrent.Callable}
+ *   <li>Methods that create and return a {@link Callable}
  *       out of other closure-like forms, so they can be used
  *       in execution methods requiring {@code Callable}.
  * </ul>
@@ -102,15 +87,15 @@ public class Executors {
      * If any thread terminates due to a failure during execution
      * prior to shutdown, a new one will take its place if needed to
      * execute subsequent tasks.  The threads in the pool will exist
-     * until it is explicitly {@link com.example.javatest.concurrent.ExecutorService#shutdown shutdown}.
+     * until it is explicitly {@link ExecutorService#shutdown shutdown}.
      *
      * @param nThreads the number of threads in the pool
      * @return the newly created thread pool
      * @throws IllegalArgumentException if {@code nThreads <= 0}
      */
-    public static com.example.javatest.concurrent.ExecutorService newFixedThreadPool(int nThreads) {
+    public static ExecutorService newFixedThreadPool(int nThreads) {
         return new ThreadPoolExecutor(nThreads, nThreads,
-                                      0L, com.example.javatest.concurrent.TimeUnit.MILLISECONDS,
+                                      0L, TimeUnit.MILLISECONDS,
                                       new LinkedBlockingQueue<Runnable>());
     }
 
@@ -129,7 +114,7 @@ public class Executors {
      * @throws IllegalArgumentException if {@code parallelism <= 0}
      * @since 1.8
      */
-    public static com.example.javatest.concurrent.ExecutorService newWorkStealingPool(int parallelism) {
+    public static ExecutorService newWorkStealingPool(int parallelism) {
         return new ForkJoinPool
             (parallelism,
              ForkJoinPool.defaultForkJoinWorkerThreadFactory,
@@ -145,7 +130,7 @@ public class Executors {
      * @see #newWorkStealingPool(int)
      * @since 1.8
      */
-    public static com.example.javatest.concurrent.ExecutorService newWorkStealingPool() {
+    public static ExecutorService newWorkStealingPool() {
         return new ForkJoinPool
             (Runtime.getRuntime().availableProcessors(),
              ForkJoinPool.defaultForkJoinWorkerThreadFactory,
@@ -162,7 +147,7 @@ public class Executors {
      * available.  If any thread terminates due to a failure during
      * execution prior to shutdown, a new one will take its place if
      * needed to execute subsequent tasks.  The threads in the pool will
-     * exist until it is explicitly {@link com.example.javatest.concurrent.ExecutorService#shutdown
+     * exist until it is explicitly {@link ExecutorService#shutdown
      * shutdown}.
      *
      * @param nThreads the number of threads in the pool
@@ -171,9 +156,9 @@ public class Executors {
      * @throws NullPointerException if threadFactory is null
      * @throws IllegalArgumentException if {@code nThreads <= 0}
      */
-    public static com.example.javatest.concurrent.ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
+    public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
         return new ThreadPoolExecutor(nThreads, nThreads,
-                                      0L, com.example.javatest.concurrent.TimeUnit.MILLISECONDS,
+                                      0L, TimeUnit.MILLISECONDS,
                                       new LinkedBlockingQueue<Runnable>(),
                                       threadFactory);
     }
@@ -191,7 +176,7 @@ public class Executors {
      *
      * @return the newly created single-threaded Executor
      */
-    public static com.example.javatest.concurrent.ExecutorService newSingleThreadExecutor() {
+    public static ExecutorService newSingleThreadExecutor() {
         return new FinalizableDelegatedExecutorService
             (new ThreadPoolExecutor(1, 1,
                                     0L, TimeUnit.MILLISECONDS,
@@ -210,10 +195,10 @@ public class Executors {
      * @return the newly created single-threaded Executor
      * @throws NullPointerException if threadFactory is null
      */
-    public static com.example.javatest.concurrent.ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
+    public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
         return new FinalizableDelegatedExecutorService
             (new ThreadPoolExecutor(1, 1,
-                                    0L, com.example.javatest.concurrent.TimeUnit.MILLISECONDS,
+                                    0L, TimeUnit.MILLISECONDS,
                                     new LinkedBlockingQueue<Runnable>(),
                                     threadFactory));
     }
@@ -234,10 +219,10 @@ public class Executors {
      *
      * @return the newly created thread pool
      */
-    public static com.example.javatest.concurrent.ExecutorService newCachedThreadPool() {
+    public static ExecutorService newCachedThreadPool() {
         return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
-                                      60L, com.example.javatest.concurrent.TimeUnit.SECONDS,
-                                      new com.example.javatest.concurrent.SynchronousQueue<Runnable>());
+                                      60L, TimeUnit.SECONDS,
+                                      new SynchronousQueue<Runnable>());
     }
 
     /**
@@ -250,9 +235,9 @@ public class Executors {
      * @return the newly created thread pool
      * @throws NullPointerException if threadFactory is null
      */
-    public static com.example.javatest.concurrent.ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
+    public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
         return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
-                                      60L, com.example.javatest.concurrent.TimeUnit.SECONDS,
+                                      60L, TimeUnit.SECONDS,
                                       new SynchronousQueue<Runnable>(),
                                       threadFactory);
     }
@@ -327,7 +312,7 @@ public class Executors {
 
     /**
      * Returns an object that delegates all defined {@link
-     * com.example.javatest.concurrent.ExecutorService} methods to the given executor, but not any
+     * ExecutorService} methods to the given executor, but not any
      * other methods that might otherwise be accessible using
      * casts. This provides a way to safely "freeze" configuration and
      * disallow tuning of a given concrete implementation.
@@ -335,7 +320,7 @@ public class Executors {
      * @return an {@code ExecutorService} instance
      * @throws NullPointerException if executor null
      */
-    public static com.example.javatest.concurrent.ExecutorService unconfigurableExecutorService(com.example.javatest.concurrent.ExecutorService executor) {
+    public static ExecutorService unconfigurableExecutorService(ExecutorService executor) {
         if (executor == null)
             throw new NullPointerException();
         return new DelegatedExecutorService(executor);
@@ -392,7 +377,7 @@ public class Executors {
     }
 
     /**
-     * Returns a {@link com.example.javatest.concurrent.Callable} object that, when
+     * Returns a {@link Callable} object that, when
      * called, runs the given task and returns the given result.  This
      * can be useful when applying methods requiring a
      * {@code Callable} to an otherwise resultless action.
@@ -402,51 +387,51 @@ public class Executors {
      * @return a callable object
      * @throws NullPointerException if task null
      */
-    public static <T> com.example.javatest.concurrent.Callable<T> callable(Runnable task, T result) {
+    public static <T> Callable<T> callable(Runnable task, T result) {
         if (task == null)
             throw new NullPointerException();
         return new RunnableAdapter<T>(task, result);
     }
 
     /**
-     * Returns a {@link com.example.javatest.concurrent.Callable} object that, when
+     * Returns a {@link Callable} object that, when
      * called, runs the given task and returns {@code null}.
      * @param task the task to run
      * @return a callable object
      * @throws NullPointerException if task null
      */
-    public static com.example.javatest.concurrent.Callable<Object> callable(Runnable task) {
+    public static Callable<Object> callable(Runnable task) {
         if (task == null)
             throw new NullPointerException();
         return new RunnableAdapter<Object>(task, null);
     }
 
     /**
-     * Returns a {@link com.example.javatest.concurrent.Callable} object that, when
+     * Returns a {@link Callable} object that, when
      * called, runs the given privileged action and returns its result.
      * @param action the privileged action to run
      * @return a callable object
      * @throws NullPointerException if action null
      */
-    public static com.example.javatest.concurrent.Callable<Object> callable(final PrivilegedAction<?> action) {
+    public static Callable<Object> callable(final PrivilegedAction<?> action) {
         if (action == null)
             throw new NullPointerException();
-        return new com.example.javatest.concurrent.Callable<Object>() {
+        return new Callable<Object>() {
             public Object call() { return action.run(); }};
     }
 
     /**
-     * Returns a {@link com.example.javatest.concurrent.Callable} object that, when
+     * Returns a {@link Callable} object that, when
      * called, runs the given privileged exception action and returns
      * its result.
      * @param action the privileged exception action to run
      * @return a callable object
      * @throws NullPointerException if action null
      */
-    public static com.example.javatest.concurrent.Callable<Object> callable(final PrivilegedExceptionAction<?> action) {
+    public static Callable<Object> callable(final PrivilegedExceptionAction<?> action) {
         if (action == null)
             throw new NullPointerException();
-        return new com.example.javatest.concurrent.Callable<Object>() {
+        return new Callable<Object>() {
             public Object call() throws Exception { return action.run(); }};
     }
 
@@ -462,7 +447,7 @@ public class Executors {
      *       method.
      */
     @Deprecated(since="17", forRemoval=true)
-    public static <T> com.example.javatest.concurrent.Callable<T> privilegedCallable(com.example.javatest.concurrent.Callable<T> callable) {
+    public static <T> Callable<T> privilegedCallable(Callable<T> callable) {
         if (callable == null)
             throw new NullPointerException();
         return new PrivilegedCallable<T>(callable);
@@ -480,7 +465,7 @@ public class Executors {
      *       method.
      */
     @Deprecated(since="17", forRemoval=true)
-    public static <T> com.example.javatest.concurrent.Callable<T> privilegedCallableUsingCurrentClassLoader(com.example.javatest.concurrent.Callable<T> callable) {
+    public static <T> Callable<T> privilegedCallableUsingCurrentClassLoader(Callable<T> callable) {
         if (callable == null)
             throw new NullPointerException();
         return new PrivilegedCallableUsingCurrentClassLoader<T>(callable);
@@ -491,11 +476,11 @@ public class Executors {
     /**
      * A callable that runs given task and returns given result.
      */
-    private static final class RunnableAdapter<T> implements com.example.javatest.concurrent.Callable<T> {
+    private static final class RunnableAdapter<T> implements Callable<T> {
         private final Runnable task;
         private final T result;
         RunnableAdapter(Runnable task, T result) {
-            this.task = task;
+            this.task = task;// submit 提交的 Runnable
             this.result = result;
         }
         public T call() {
@@ -510,13 +495,13 @@ public class Executors {
     /**
      * A callable that runs under established access control settings.
      */
-    private static final class PrivilegedCallable<T> implements com.example.javatest.concurrent.Callable<T> {
-        final com.example.javatest.concurrent.Callable<T> task;
+    private static final class PrivilegedCallable<T> implements Callable<T> {
+        final Callable<T> task;
         @SuppressWarnings("removal")
         final AccessControlContext acc;
 
         @SuppressWarnings("removal")
-        PrivilegedCallable(com.example.javatest.concurrent.Callable<T> task) {
+        PrivilegedCallable(Callable<T> task) {
             this.task = task;
             this.acc = AccessController.getContext();
         }
@@ -545,14 +530,14 @@ public class Executors {
      * current ClassLoader.
      */
     private static final class PrivilegedCallableUsingCurrentClassLoader<T>
-            implements com.example.javatest.concurrent.Callable<T> {
-        final com.example.javatest.concurrent.Callable<T> task;
+            implements Callable<T> {
+        final Callable<T> task;
         @SuppressWarnings("removal")
         final AccessControlContext acc;
         final ClassLoader ccl;
 
         @SuppressWarnings("removal")
-        PrivilegedCallableUsingCurrentClassLoader(com.example.javatest.concurrent.Callable<T> task) {
+        PrivilegedCallableUsingCurrentClassLoader(Callable<T> task) {
             // Android-removed: System.getSecurityManager always returns null.
             /*
             SecurityManager sm = System.getSecurityManager();
@@ -682,12 +667,12 @@ public class Executors {
      * of an ExecutorService implementation.
      */
     private static class DelegatedExecutorService
-            implements com.example.javatest.concurrent.ExecutorService {
+            implements ExecutorService {
         // Android-added: 
         // Needed for FinalizableDelegatedExecutorService below.
         
-        private final com.example.javatest.concurrent.ExecutorService e;
-        DelegatedExecutorService(com.example.javatest.concurrent.ExecutorService executor) { e = executor; }
+        private final ExecutorService e;
+        DelegatedExecutorService(ExecutorService executor) { e = executor; }
         public void execute(Runnable command) {
             try {
                 e.execute(command);
@@ -709,48 +694,48 @@ public class Executors {
                 return e.isTerminated();
             } finally { reachabilityFence(this); }
         }
-        public boolean awaitTermination(long timeout, com.example.javatest.concurrent.TimeUnit unit)
+        public boolean awaitTermination(long timeout, TimeUnit unit)
             throws InterruptedException {
             try {
                 return e.awaitTermination(timeout, unit);
             } finally { reachabilityFence(this); }
         }
-        public com.example.javatest.concurrent.Future<?> submit(Runnable task) {
+        public Future<?> submit(Runnable task) {
             try {
                 return e.submit(task);
             } finally { reachabilityFence(this); }
         }
-        public <T> com.example.javatest.concurrent.Future<T> submit(com.example.javatest.concurrent.Callable<T> task) {
+        public <T> Future<T> submit(Callable<T> task) {
             try {
                 return e.submit(task);
             } finally { reachabilityFence(this); }
         }
-        public <T> com.example.javatest.concurrent.Future<T> submit(Runnable task, T result) {
+        public <T> Future<T> submit(Runnable task, T result) {
             try {
                 return e.submit(task, result);
             } finally { reachabilityFence(this); }
         }
-        public <T> List<com.example.javatest.concurrent.Future<T>> invokeAll(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks)
+        public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks)
             throws InterruptedException {
             try {
                 return e.invokeAll(tasks);
             } finally { reachabilityFence(this); }
         }
-        public <T> List<Future<T>> invokeAll(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks,
-                                             long timeout, com.example.javatest.concurrent.TimeUnit unit)
+        public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks,
+                                             long timeout, TimeUnit unit)
             throws InterruptedException {
             try {
                 return e.invokeAll(tasks, timeout, unit);
             } finally { reachabilityFence(this); }
         }
-        public <T> T invokeAny(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks)
+        public <T> T invokeAny(Collection<? extends Callable<T>> tasks)
             throws InterruptedException, ExecutionException {
             try {
                 return e.invokeAny(tasks);
             } finally { reachabilityFence(this); }
         }
-        public <T> T invokeAny(Collection<? extends com.example.javatest.concurrent.Callable<T>> tasks,
-                               long timeout, com.example.javatest.concurrent.TimeUnit unit)
+        public <T> T invokeAny(Collection<? extends Callable<T>> tasks,
+                               long timeout, TimeUnit unit)
             throws InterruptedException, ExecutionException, TimeoutException {
             try {
                 return e.invokeAny(tasks, timeout, unit);
@@ -781,13 +766,13 @@ public class Executors {
             super(executor);
             e = executor;
         }
-        public com.example.javatest.concurrent.ScheduledFuture<?> schedule(Runnable command, long delay, com.example.javatest.concurrent.TimeUnit unit) {
+        public ScheduledFuture<?> schedule(Runnable command, long delay, TimeUnit unit) {
             return e.schedule(command, delay, unit);
         }
-        public <V> com.example.javatest.concurrent.ScheduledFuture<V> schedule(Callable<V> callable, long delay, com.example.javatest.concurrent.TimeUnit unit) {
+        public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
             return e.schedule(callable, delay, unit);
         }
-        public com.example.javatest.concurrent.ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, com.example.javatest.concurrent.TimeUnit unit) {
+        public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
             return e.scheduleAtFixedRate(command, initialDelay, period, unit);
         }
         public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {

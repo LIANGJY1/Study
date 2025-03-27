@@ -92,6 +92,7 @@ import com.example.javatest.concurrent.TimeoutException;
  * @author Doug Lea
  * @param <V> The result type returned by this Future's {@code get} method
  */
+// 提供任务状态查询、结果获取和取消操作。
 public interface Future<V> {
 
     /**

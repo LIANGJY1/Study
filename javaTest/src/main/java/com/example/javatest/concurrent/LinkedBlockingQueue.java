@@ -42,9 +42,6 @@ import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Spliterator;
 import java.util.Spliterators;
-import com.example.javatest.concurrent.BlockingQueue;
-
-import com.example.javatest.concurrent.TimeUnit;
 import com.example.javatest.concurrent.atomic.AtomicInteger;
 import com.example.javatest.concurrent.locks.Condition;
 import com.example.javatest.concurrent.locks.ReentrantLock;
@@ -81,8 +78,9 @@ import java.util.function.Predicate;
  * @author Doug Lea
  * @param <E> the type of elements held in this queue
  */
+// 一个基于链表结构的阻塞队列，此队列按FIFO排序元素，吞吐量通常要高于ArrayBlockingQueue。静态工厂方法Executors.newFixedThreadPool()使用了这个队列。
 public class LinkedBlockingQueue<E> extends AbstractQueue<E>
-        implements com.example.javatest.concurrent.BlockingQueue<E>, java.io.Serializable {
+        implements BlockingQueue<E>, java.io.Serializable {
     private static final long serialVersionUID = -6903933977591709194L;
 
     /*
@@ -365,7 +363,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E>
      * @throws InterruptedException {@inheritDoc}
      * @throws NullPointerException {@inheritDoc}
      */
-    public boolean offer(E e, long timeout, com.example.javatest.concurrent.TimeUnit unit)
+    public boolean offer(E e, long timeout, TimeUnit unit)
         throws InterruptedException {
 
         if (e == null) throw new NullPointerException();

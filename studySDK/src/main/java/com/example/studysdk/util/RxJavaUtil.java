@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -50,25 +51,31 @@ public class RxJavaUtil {
 
 
 
-
-
-
-
     @SuppressLint("CheckResult")
     public static void test2() {
 
+
+        MLog.i(TAG + "test: " + Runtime.getRuntime().availableProcessors());
+
+
+
         // 创建一个核心线程数为2，最大线程数为4，空闲时间为30秒的线程池
         ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                2, // corePoolSize
-                4, // maximumPoolSize
+                1, // corePoolSize
+                1, // maximumPoolSize
                 30, // keepAliveTime
                 TimeUnit.SECONDS, // unit
-                new LinkedBlockingQueue<>()); // workQueue
+                new LinkedBlockingQueue<>(1)); // workQueue
 
         // 提交任务给线程池
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 100; i++) {
             executor.submit(() -> {
                 MLog.i(TAG + "Task executed by " + Thread.currentThread().getName());
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             });
         }
 
@@ -105,6 +112,7 @@ public class RxJavaUtil {
 
 //        ThreadPoolExecutor executor = new ThreadPoolExecutor();
 //        executor.execute();
+
     }
 
 

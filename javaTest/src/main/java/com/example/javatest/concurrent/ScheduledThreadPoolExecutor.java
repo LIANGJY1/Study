@@ -45,22 +45,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
-import com.example.javatest.concurrent.AbstractExecutorService;
-import com.example.javatest.concurrent.BlockingQueue;
-import com.example.javatest.concurrent.Callable;
-import com.example.javatest.concurrent.Delayed;
-import com.example.javatest.concurrent.ExecutionException;
-import com.example.javatest.concurrent.Executors;
-import com.example.javatest.concurrent.Future;
-import com.example.javatest.concurrent.FutureTask;
-import com.example.javatest.concurrent.RejectedExecutionException;
-import com.example.javatest.concurrent.RejectedExecutionHandler;
-import com.example.javatest.concurrent.RunnableScheduledFuture;
-import com.example.javatest.concurrent.ScheduledExecutorService;
-import com.example.javatest.concurrent.ScheduledFuture;
-import com.example.javatest.concurrent.ThreadFactory;
-import com.example.javatest.concurrent.ThreadPoolExecutor;
-import com.example.javatest.concurrent.TimeUnit;
 import com.example.javatest.concurrent.atomic.AtomicLong;
 import com.example.javatest.concurrent.locks.Condition;
 import com.example.javatest.concurrent.locks.ReentrantLock;
@@ -107,14 +91,14 @@ import com.example.javatest.concurrent.locks.ReentrantLock;
  * without threads to handle tasks once they become eligible to run.
  *
  * <p>As with {@code ThreadPoolExecutor}, if not otherwise specified,
- * this class uses {@link com.example.javatest.concurrent.Executors#defaultThreadFactory} as the
+ * this class uses {@link Executors#defaultThreadFactory} as the
  * default thread factory, and {@link AbortPolicy}
  * as the default rejected execution handler.
  *
  * <p><b>Extension notes:</b> This class overrides the
  * {@link ThreadPoolExecutor#execute(Runnable) execute} and
  * {@link AbstractExecutorService#submit(Runnable) submit}
- * methods to generate internal {@link com.example.javatest.concurrent.ScheduledFuture} objects to
+ * methods to generate internal {@link ScheduledFuture} objects to
  * control per-task delays and scheduling.  To preserve
  * functionality, any further overrides of these methods in
  * subclasses must invoke superclass versions, which effectively
@@ -202,7 +186,7 @@ public class ScheduledThreadPoolExecutor
     private static final AtomicLong sequencer = new AtomicLong();
 
     private class ScheduledFutureTask<V>
-            extends FutureTask<V> implements com.example.javatest.concurrent.RunnableScheduledFuture<V> {
+            extends FutureTask<V> implements RunnableScheduledFuture<V> {
 
         /** Sequence number to break ties FIFO */
         private final long sequenceNumber;
@@ -219,7 +203,7 @@ public class ScheduledThreadPoolExecutor
         private final long period;
 
         /** The actual task to be re-enqueued by reExecutePeriodic */
-        com.example.javatest.concurrent.RunnableScheduledFuture<V> outerTask = this;
+        RunnableScheduledFuture<V> outerTask = this;
 
         /**
          * Index into delay queue, to support faster cancellation.
@@ -252,7 +236,7 @@ public class ScheduledThreadPoolExecutor
         /**
          * Creates a one-shot action with given nanoTime-based trigger time.
          */
-        ScheduledFutureTask(com.example.javatest.concurrent.Callable<V> callable, long triggerTime,
+        ScheduledFutureTask(Callable<V> callable, long triggerTime,
                             long sequenceNumber) {
             super(callable);
             this.time = triggerTime;
@@ -260,11 +244,11 @@ public class ScheduledThreadPoolExecutor
             this.sequenceNumber = sequenceNumber;
         }
 
-        public long getDelay(com.example.javatest.concurrent.TimeUnit unit) {
+        public long getDelay(TimeUnit unit) {
             return unit.convert(time - System.nanoTime(), NANOSECONDS);
         }
 
-        public int compareTo(com.example.javatest.concurrent.Delayed other) {
+        public int compareTo(Delayed other) {
             if (other == this) // compare zero if same object
                 return 0;
             if (other instanceof ScheduledFutureTask) {
@@ -332,7 +316,7 @@ public class ScheduledThreadPoolExecutor
      * Returns true if can run a task given current run state and
      * run-after-shutdown parameters.
      */
-    boolean canRunInCurrentRunState(com.example.javatest.concurrent.RunnableScheduledFuture<?> task) {
+    boolean canRunInCurrentRunState(RunnableScheduledFuture<?> task) {
         if (!isShutdown())
             return true;
         if (isStopped())
@@ -356,7 +340,7 @@ public class ScheduledThreadPoolExecutor
      *
      * @param task the task
      */
-    private void delayedExecute(com.example.javatest.concurrent.RunnableScheduledFuture<?> task) {
+    private void delayedExecute(RunnableScheduledFuture<?> task) {
         if (isShutdown())
             reject(task);
         else {
@@ -374,7 +358,7 @@ public class ScheduledThreadPoolExecutor
      *
      * @param task the task
      */
-    void reExecutePeriodic(com.example.javatest.concurrent.RunnableScheduledFuture<?> task) {
+    void reExecutePeriodic(RunnableScheduledFuture<?> task) {
         if (canRunInCurrentRunState(task)) {
             super.getQueue().add(task);
             if (canRunInCurrentRunState(task) || !remove(task)) {
@@ -390,7 +374,7 @@ public class ScheduledThreadPoolExecutor
      * due to shutdown policy.  Invoked within super.shutdown.
      */
     @Override void onShutdown() {
-        com.example.javatest.concurrent.BlockingQueue<Runnable> q = super.getQueue();
+        BlockingQueue<Runnable> q = super.getQueue();
         boolean keepDelayed =
             getExecuteExistingDelayedTasksAfterShutdownPolicy();
         boolean keepPeriodic =
@@ -399,8 +383,8 @@ public class ScheduledThreadPoolExecutor
         // TODO: implement and use efficient removeIf
         // super.getQueue().removeIf(...);
         for (Object e : q.toArray()) {
-            if (e instanceof com.example.javatest.concurrent.RunnableScheduledFuture) {
-                com.example.javatest.concurrent.RunnableScheduledFuture<?> t = (com.example.javatest.concurrent.RunnableScheduledFuture<?>)e;
+            if (e instanceof RunnableScheduledFuture) {
+                RunnableScheduledFuture<?> t = (RunnableScheduledFuture<?>)e;
                 if ((t.isPeriodic()
                      ? !keepPeriodic
                      // Android-changed: Preserving behaviour on expired tasks (b/202927404)
@@ -427,8 +411,8 @@ public class ScheduledThreadPoolExecutor
      * @return a task that can execute the runnable
      * @since 1.6
      */
-    protected <V> com.example.javatest.concurrent.RunnableScheduledFuture<V> decorateTask(
-        Runnable runnable, com.example.javatest.concurrent.RunnableScheduledFuture<V> task) {
+    protected <V> RunnableScheduledFuture<V> decorateTask(
+        Runnable runnable, RunnableScheduledFuture<V> task) {
         return task;
     }
 
@@ -444,8 +428,8 @@ public class ScheduledThreadPoolExecutor
      * @return a task that can execute the callable
      * @since 1.6
      */
-    protected <V> com.example.javatest.concurrent.RunnableScheduledFuture<V> decorateTask(
-            com.example.javatest.concurrent.Callable<V> callable, com.example.javatest.concurrent.RunnableScheduledFuture<V> task) {
+    protected <V> RunnableScheduledFuture<V> decorateTask(
+            Callable<V> callable, RunnableScheduledFuture<V> task) {
         return task;
     }
 
@@ -509,7 +493,7 @@ public class ScheduledThreadPoolExecutor
      * @throws NullPointerException if {@code handler} is null
      */
     public ScheduledThreadPoolExecutor(int corePoolSize,
-                                       com.example.javatest.concurrent.RejectedExecutionHandler handler) {
+                                       RejectedExecutionHandler handler) {
         super(corePoolSize, Integer.MAX_VALUE,
               DEFAULT_KEEPALIVE_MILLIS, MILLISECONDS,
               new DelayedWorkQueue(), handler);
@@ -540,7 +524,7 @@ public class ScheduledThreadPoolExecutor
     /**
      * Returns the nanoTime-based trigger time of a delayed action.
      */
-    private long triggerTime(long delay, com.example.javatest.concurrent.TimeUnit unit) {
+    private long triggerTime(long delay, TimeUnit unit) {
         return triggerTime(unit.toNanos((delay < 0) ? 0 : delay));
     }
 
@@ -560,7 +544,7 @@ public class ScheduledThreadPoolExecutor
      * Long.MAX_VALUE.
      */
     private long overflowFree(long delay) {
-        com.example.javatest.concurrent.Delayed head = (Delayed) super.getQueue().peek();
+        Delayed head = (Delayed) super.getQueue().peek();
         if (head != null) {
             long headDelay = head.getDelay(NANOSECONDS);
             if (headDelay < 0 && (delay - headDelay < 0))
@@ -570,15 +554,15 @@ public class ScheduledThreadPoolExecutor
     }
 
     /**
-     * @throws com.example.javatest.concurrent.RejectedExecutionException {@inheritDoc}
+     * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public com.example.javatest.concurrent.ScheduledFuture<?> schedule(Runnable command,
+    public ScheduledFuture<?> schedule(Runnable command,
                                                             long delay,
-                                                            com.example.javatest.concurrent.TimeUnit unit) {
+                                                            TimeUnit unit) {
         if (command == null || unit == null)
             throw new NullPointerException();
-        com.example.javatest.concurrent.RunnableScheduledFuture<Void> t = decorateTask(command,
+        RunnableScheduledFuture<Void> t = decorateTask(command,
             new ScheduledFutureTask<Void>(command, null,
                                           triggerTime(delay, unit),
                                           sequencer.getAndIncrement()));
@@ -587,15 +571,15 @@ public class ScheduledThreadPoolExecutor
     }
 
     /**
-     * @throws com.example.javatest.concurrent.RejectedExecutionException {@inheritDoc}
+     * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public <V> com.example.javatest.concurrent.ScheduledFuture<V> schedule(com.example.javatest.concurrent.Callable<V> callable,
+    public <V> ScheduledFuture<V> schedule(Callable<V> callable,
                                                                 long delay,
-                                                                com.example.javatest.concurrent.TimeUnit unit) {
+                                                                TimeUnit unit) {
         if (callable == null || unit == null)
             throw new NullPointerException();
-        com.example.javatest.concurrent.RunnableScheduledFuture<V> t = decorateTask(callable,
+        RunnableScheduledFuture<V> t = decorateTask(callable,
             new ScheduledFutureTask<V>(callable,
                                        triggerTime(delay, unit),
                                        sequencer.getAndIncrement()));
@@ -613,7 +597,7 @@ public class ScheduledThreadPoolExecutor
      * <p>The sequence of task executions continues indefinitely until
      * one of the following exceptional completions occur:
      * <ul>
-     * <li>The task is {@linkplain com.example.javatest.concurrent.Future#cancel explicitly cancelled}
+     * <li>The task is {@linkplain Future#cancel explicitly cancelled}
      * via the returned future.
      * <li>Method {@link #shutdown} is called and the {@linkplain
      * #getContinueExistingPeriodicTasksAfterShutdownPolicy policy on
@@ -621,25 +605,25 @@ public class ScheduledThreadPoolExecutor
      * {@link #shutdownNow} is called; also resulting in task
      * cancellation.
      * <li>An execution of the task throws an exception.  In this case
-     * calling {@link com.example.javatest.concurrent.Future#get() get} on the returned future will throw
+     * calling {@link Future#get() get} on the returned future will throw
      * {@link ExecutionException}, holding the exception as its cause.
      * </ul>
      * Subsequent executions are suppressed.  Subsequent calls to
-     * {@link com.example.javatest.concurrent.Future#isDone isDone()} on the returned future will
+     * {@link Future#isDone isDone()} on the returned future will
      * return {@code true}.
      *
      * <p>If any execution of this task takes longer than its period, then
      * subsequent executions may start late, but will not concurrently
      * execute.
      *
-     * @throws com.example.javatest.concurrent.RejectedExecutionException {@inheritDoc}
+     * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      * @throws IllegalArgumentException   {@inheritDoc}
      */
-    public com.example.javatest.concurrent.ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command,
                                                                        long initialDelay,
                                                                        long period,
-                                                                       com.example.javatest.concurrent.TimeUnit unit) {
+                                                                       TimeUnit unit) {
         if (command == null || unit == null)
             throw new NullPointerException();
         if (period <= 0L)
@@ -650,7 +634,7 @@ public class ScheduledThreadPoolExecutor
                                           triggerTime(initialDelay, unit),
                                           unit.toNanos(period),
                                           sequencer.getAndIncrement());
-        com.example.javatest.concurrent.RunnableScheduledFuture<Void> t = decorateTask(command, sft);
+        RunnableScheduledFuture<Void> t = decorateTask(command, sft);
         sft.outerTask = t;
         delayedExecute(t);
         return t;
@@ -665,7 +649,7 @@ public class ScheduledThreadPoolExecutor
      * <p>The sequence of task executions continues indefinitely until
      * one of the following exceptional completions occur:
      * <ul>
-     * <li>The task is {@linkplain com.example.javatest.concurrent.Future#cancel explicitly cancelled}
+     * <li>The task is {@linkplain Future#cancel explicitly cancelled}
      * via the returned future.
      * <li>Method {@link #shutdown} is called and the {@linkplain
      * #getContinueExistingPeriodicTasksAfterShutdownPolicy policy on
@@ -673,21 +657,21 @@ public class ScheduledThreadPoolExecutor
      * {@link #shutdownNow} is called; also resulting in task
      * cancellation.
      * <li>An execution of the task throws an exception.  In this case
-     * calling {@link com.example.javatest.concurrent.Future#get() get} on the returned future will throw
+     * calling {@link Future#get() get} on the returned future will throw
      * {@link ExecutionException}, holding the exception as its cause.
      * </ul>
      * Subsequent executions are suppressed.  Subsequent calls to
-     * {@link com.example.javatest.concurrent.Future#isDone isDone()} on the returned future will
+     * {@link Future#isDone isDone()} on the returned future will
      * return {@code true}.
      *
-     * @throws com.example.javatest.concurrent.RejectedExecutionException {@inheritDoc}
+     * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      * @throws IllegalArgumentException   {@inheritDoc}
      */
-    public com.example.javatest.concurrent.ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
+    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command,
                                                                           long initialDelay,
                                                                           long delay,
-                                                                          com.example.javatest.concurrent.TimeUnit unit) {
+                                                                          TimeUnit unit) {
         if (command == null || unit == null)
             throw new NullPointerException();
         if (delay <= 0L)
@@ -698,7 +682,7 @@ public class ScheduledThreadPoolExecutor
                                           triggerTime(initialDelay, unit),
                                           -unit.toNanos(delay),
                                           sequencer.getAndIncrement());
-        com.example.javatest.concurrent.RunnableScheduledFuture<Void> t = decorateTask(command, sft);
+        RunnableScheduledFuture<Void> t = decorateTask(command, sft);
         sft.outerTask = t;
         delayedExecute(t);
         return t;
@@ -707,18 +691,18 @@ public class ScheduledThreadPoolExecutor
     /**
      * Executes {@code command} with zero required delay.
      * This has effect equivalent to
-     * {@link #schedule(Runnable,long, com.example.javatest.concurrent.TimeUnit) schedule(command, 0, anyUnit)}.
+     * {@link #schedule(Runnable,long, TimeUnit) schedule(command, 0, anyUnit)}.
      * Note that inspections of the queue and of the list returned by
      * {@code shutdownNow} will access the zero-delayed
-     * {@link com.example.javatest.concurrent.ScheduledFuture}, not the {@code command} itself.
+     * {@link ScheduledFuture}, not the {@code command} itself.
      *
      * <p>A consequence of the use of {@code ScheduledFuture} objects is
      * that {@link ThreadPoolExecutor#afterExecute afterExecute} is always
      * called with a null second {@code Throwable} argument, even if the
      * {@code command} terminated abruptly.  Instead, the {@code Throwable}
-     * thrown by such a task can be obtained via {@link com.example.javatest.concurrent.Future#get}.
+     * thrown by such a task can be obtained via {@link Future#get}.
      *
-     * @throws com.example.javatest.concurrent.RejectedExecutionException at discretion of
+     * @throws RejectedExecutionException at discretion of
      *         {@code RejectedExecutionHandler}, if the task
      *         cannot be accepted for execution because the
      *         executor has been shut down
@@ -731,18 +715,18 @@ public class ScheduledThreadPoolExecutor
     // Override AbstractExecutorService methods
 
     /**
-     * @throws com.example.javatest.concurrent.RejectedExecutionException {@inheritDoc}
+     * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public com.example.javatest.concurrent.Future<?> submit(Runnable task) {
+    public Future<?> submit(Runnable task) {
         return schedule(task, 0, NANOSECONDS);
     }
 
     /**
-     * @throws com.example.javatest.concurrent.RejectedExecutionException {@inheritDoc}
+     * @throws RejectedExecutionException {@inheritDoc}
      * @throws NullPointerException       {@inheritDoc}
      */
-    public <T> com.example.javatest.concurrent.Future<T> submit(Runnable task, T result) {
+    public <T> Future<T> submit(Runnable task, T result) {
         return schedule(Executors.callable(task, result), 0, NANOSECONDS);
     }
 
@@ -880,7 +864,7 @@ public class ScheduledThreadPoolExecutor
      * fails to respond to interrupts may never terminate.
      *
      * @return list of tasks that never commenced execution.
-     *         Each element of this list is a {@link com.example.javatest.concurrent.ScheduledFuture}.
+     *         Each element of this list is a {@link ScheduledFuture}.
      *         For tasks submitted via one of the {@code schedule}
      *         methods, the element will be identical to the returned
      *         {@code ScheduledFuture}.  For tasks submitted using
@@ -909,7 +893,7 @@ public class ScheduledThreadPoolExecutor
      *
      * @return the task queue
      */
-    public com.example.javatest.concurrent.BlockingQueue<Runnable> getQueue() {
+    public BlockingQueue<Runnable> getQueue() {
         return super.getQueue();
     }
 
@@ -945,8 +929,8 @@ public class ScheduledThreadPoolExecutor
          */
 
         private static final int INITIAL_CAPACITY = 16;
-        private com.example.javatest.concurrent.RunnableScheduledFuture<?>[] queue =
-            new com.example.javatest.concurrent.RunnableScheduledFuture<?>[INITIAL_CAPACITY];
+        private RunnableScheduledFuture<?>[] queue =
+            new RunnableScheduledFuture<?>[INITIAL_CAPACITY];
         private final ReentrantLock lock = new ReentrantLock();
         private int size;
 
@@ -977,7 +961,7 @@ public class ScheduledThreadPoolExecutor
         /**
          * Sets f's heapIndex if it is a ScheduledFutureTask.
          */
-        private static void setIndex(com.example.javatest.concurrent.RunnableScheduledFuture<?> f, int idx) {
+        private static void setIndex(RunnableScheduledFuture<?> f, int idx) {
             if (f instanceof ScheduledFutureTask)
                 ((ScheduledFutureTask)f).heapIndex = idx;
         }
@@ -986,10 +970,10 @@ public class ScheduledThreadPoolExecutor
          * Sifts element added at bottom up to its heap-ordered spot.
          * Call only when holding lock.
          */
-        private void siftUp(int k, com.example.javatest.concurrent.RunnableScheduledFuture<?> key) {
+        private void siftUp(int k, RunnableScheduledFuture<?> key) {
             while (k > 0) {
                 int parent = (k - 1) >>> 1;
-                com.example.javatest.concurrent.RunnableScheduledFuture<?> e = queue[parent];
+                RunnableScheduledFuture<?> e = queue[parent];
                 if (key.compareTo(e) >= 0)
                     break;
                 queue[k] = e;
@@ -1004,11 +988,11 @@ public class ScheduledThreadPoolExecutor
          * Sifts element added at top down to its heap-ordered spot.
          * Call only when holding lock.
          */
-        private void siftDown(int k, com.example.javatest.concurrent.RunnableScheduledFuture<?> key) {
+        private void siftDown(int k, RunnableScheduledFuture<?> key) {
             int half = size >>> 1;
             while (k < half) {
                 int child = (k << 1) + 1;
-                com.example.javatest.concurrent.RunnableScheduledFuture<?> c = queue[child];
+                RunnableScheduledFuture<?> c = queue[child];
                 int right = child + 1;
                 if (right < size && c.compareTo(queue[right]) > 0)
                     c = queue[child = right];
@@ -1073,7 +1057,7 @@ public class ScheduledThreadPoolExecutor
 
                 setIndex(queue[i], -1);
                 int s = --size;
-                com.example.javatest.concurrent.RunnableScheduledFuture<?> replacement = queue[s];
+                RunnableScheduledFuture<?> replacement = queue[s];
                 queue[s] = null;
                 if (s != i) {
                     siftDown(i, replacement);
@@ -1104,7 +1088,7 @@ public class ScheduledThreadPoolExecutor
             return Integer.MAX_VALUE;
         }
 
-        public com.example.javatest.concurrent.RunnableScheduledFuture<?> peek() {
+        public RunnableScheduledFuture<?> peek() {
             final ReentrantLock lock = this.lock;
             lock.lock();
             try {
@@ -1117,7 +1101,7 @@ public class ScheduledThreadPoolExecutor
         public boolean offer(Runnable x) {
             if (x == null)
                 throw new NullPointerException();
-            com.example.javatest.concurrent.RunnableScheduledFuture<?> e = (com.example.javatest.concurrent.RunnableScheduledFuture<?>)x;
+            RunnableScheduledFuture<?> e = (RunnableScheduledFuture<?>)x;
             final ReentrantLock lock = this.lock;
             lock.lock();
             try {
@@ -1149,7 +1133,7 @@ public class ScheduledThreadPoolExecutor
             return offer(e);
         }
 
-        public boolean offer(Runnable e, long timeout, com.example.javatest.concurrent.TimeUnit unit) {
+        public boolean offer(Runnable e, long timeout, TimeUnit unit) {
             return offer(e);
         }
 
@@ -1159,9 +1143,9 @@ public class ScheduledThreadPoolExecutor
          * holding lock.
          * @param f the task to remove and return
          */
-        private com.example.javatest.concurrent.RunnableScheduledFuture<?> finishPoll(com.example.javatest.concurrent.RunnableScheduledFuture<?> f) {
+        private RunnableScheduledFuture<?> finishPoll(RunnableScheduledFuture<?> f) {
             int s = --size;
-            com.example.javatest.concurrent.RunnableScheduledFuture<?> x = queue[s];
+            RunnableScheduledFuture<?> x = queue[s];
             queue[s] = null;
             if (s != 0)
                 siftDown(0, x);
@@ -1169,11 +1153,11 @@ public class ScheduledThreadPoolExecutor
             return f;
         }
 
-        public com.example.javatest.concurrent.RunnableScheduledFuture<?> poll() {
+        public RunnableScheduledFuture<?> poll() {
             final ReentrantLock lock = this.lock;
             lock.lock();
             try {
-                com.example.javatest.concurrent.RunnableScheduledFuture<?> first = queue[0];
+                RunnableScheduledFuture<?> first = queue[0];
                 return (first == null || first.getDelay(NANOSECONDS) > 0)
                     ? null
                     : finishPoll(first);
@@ -1182,12 +1166,12 @@ public class ScheduledThreadPoolExecutor
             }
         }
 
-        public com.example.javatest.concurrent.RunnableScheduledFuture<?> take() throws InterruptedException {
+        public RunnableScheduledFuture<?> take() throws InterruptedException {
             final ReentrantLock lock = this.lock;
             lock.lockInterruptibly();
             try {
                 for (;;) {
-                    com.example.javatest.concurrent.RunnableScheduledFuture<?> first = queue[0];
+                    RunnableScheduledFuture<?> first = queue[0];
                     if (first == null)
                         available.await();
                     else {
@@ -1216,14 +1200,14 @@ public class ScheduledThreadPoolExecutor
             }
         }
 
-        public com.example.javatest.concurrent.RunnableScheduledFuture<?> poll(long timeout, TimeUnit unit)
+        public RunnableScheduledFuture<?> poll(long timeout, TimeUnit unit)
             throws InterruptedException {
             long nanos = unit.toNanos(timeout);
             final ReentrantLock lock = this.lock;
             lock.lockInterruptibly();
             try {
                 for (;;) {
-                    com.example.javatest.concurrent.RunnableScheduledFuture<?> first = queue[0];
+                    RunnableScheduledFuture<?> first = queue[0];
                     if (first == null) {
                         if (nanos <= 0L)
                             return null;
@@ -1263,7 +1247,7 @@ public class ScheduledThreadPoolExecutor
             lock.lock();
             try {
                 for (int i = 0; i < size; i++) {
-                    com.example.javatest.concurrent.RunnableScheduledFuture<?> t = queue[i];
+                    RunnableScheduledFuture<?> t = queue[i];
                     if (t != null) {
                         queue[i] = null;
                         setIndex(t, -1);
@@ -1289,7 +1273,7 @@ public class ScheduledThreadPoolExecutor
             lock.lock();
             try {
                 int n = 0;
-                for (com.example.javatest.concurrent.RunnableScheduledFuture<?> first;
+                for (RunnableScheduledFuture<?> first;
                      n < maxElements
                          && (first = queue[0]) != null
                          && first.getDelay(NANOSECONDS) <= 0;) {
@@ -1343,7 +1327,7 @@ public class ScheduledThreadPoolExecutor
          * Snapshot iterator that works off copy of underlying q array.
          */
         private class Itr implements Iterator<Runnable> {
-            final com.example.javatest.concurrent.RunnableScheduledFuture<?>[] array;
+            final RunnableScheduledFuture<?>[] array;
             int cursor;        // index of next element to return; initially 0
             int lastRet = -1;  // index of last element returned; -1 if no such
 
