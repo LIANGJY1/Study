@@ -43,6 +43,7 @@ public final class IoScheduler extends Scheduler {
     final AtomicReference<CachedWorkerPool> pool;
 
     /** The name of the system property for setting the thread priority for this Scheduler. */
+    // System.setProperty("rx3.io-priority", String.valueOf(6));
     private static final String KEY_IO_PRIORITY = "rx3.io-priority";
 
     /** The name of the system property for setting the release behaviour for this Scheduler. */
@@ -57,10 +58,13 @@ public final class IoScheduler extends Scheduler {
         SHUTDOWN_THREAD_WORKER = new ThreadWorker(new RxThreadFactory("RxCachedThreadSchedulerShutdown"));
         SHUTDOWN_THREAD_WORKER.dispose();
 
+        // 默认为 Thread.NORM_PRIORITY
+        // System.setProperty("rx3.io-priority", String.valueOf(6));
         int priority = Math.max(Thread.MIN_PRIORITY, Math.min(Thread.MAX_PRIORITY,
                 Integer.getInteger(KEY_IO_PRIORITY, Thread.NORM_PRIORITY)));
 
         WORKER_THREAD_FACTORY = new RxThreadFactory(WORKER_THREAD_NAME_PREFIX, priority);
+        System.out.println("IoScheduler priority: " + priority);
 
         EVICTOR_THREAD_FACTORY = new RxThreadFactory(EVICTOR_THREAD_NAME_PREFIX, priority);
 
@@ -79,10 +83,10 @@ public final class IoScheduler extends Scheduler {
         private final ThreadFactory threadFactory;
 
         CachedWorkerPool(long keepAliveTime, TimeUnit unit, ThreadFactory threadFactory) {
-            this.keepAliveTime = unit != null ? unit.toNanos(keepAliveTime) : 0L;
-            this.expiringWorkerQueue = new ConcurrentLinkedQueue<>();
+            this.keepAliveTime = unit != null ? unit.toNanos(keepAliveTime) : 0L;// 0
+            this.expiringWorkerQueue = new ConcurrentLinkedQueue<>();// 基于链接节点的无界线程安全队列
             this.allWorkers = new CompositeDisposable();
-            this.threadFactory = threadFactory;
+            this.threadFactory = threadFactory;// RxThreadFactory
 
             ScheduledExecutorService evictor = null;
             Future<?> task = null;
@@ -157,7 +161,7 @@ public final class IoScheduler extends Scheduler {
     }
 
     public IoScheduler() {
-        this(WORKER_THREAD_FACTORY);
+        this(WORKER_THREAD_FACTORY);// 使用默认线程工厂
     }
 
     /**
@@ -166,14 +170,14 @@ public final class IoScheduler extends Scheduler {
      *                      system properties for configuring new thread creation. Cannot be null.
      */
     public IoScheduler(ThreadFactory threadFactory) {
-        this.threadFactory = threadFactory;
-        this.pool = new AtomicReference<>(NONE);
+        this.threadFactory = threadFactory;// RxThreadFactory
+        this.pool = new AtomicReference<>(NONE);// CachedWorkerPool
         start();
     }
 
     @Override
     public void start() {
-        CachedWorkerPool update = new CachedWorkerPool(KEEP_ALIVE_TIME, KEEP_ALIVE_UNIT, threadFactory);
+        CachedWorkerPool update = new CachedWorkerPool(KEEP_ALIVE_TIME, KEEP_ALIVE_UNIT, threadFactory);// 60s RxThreadFactory
         if (!pool.compareAndSet(NONE, update)) {
             update.shutdown();
         }

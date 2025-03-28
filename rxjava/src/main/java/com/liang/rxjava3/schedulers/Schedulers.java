@@ -53,7 +53,7 @@ public final class Schedulers {
     static final Scheduler COMPUTATION;
 
     @NonNull
-    static final Scheduler IO;
+    static final Scheduler IO;//
 
     @NonNull
     static final Scheduler TRAMPOLINE;
@@ -77,7 +77,7 @@ public final class Schedulers {
         static final Scheduler DEFAULT = new NewThreadScheduler();
     }
 
-    static {
+    static {// 类初始化时执行，仅执行一次
         SINGLE = RxJavaPlugins.initSingleScheduler(new SingleTask());
 
         COMPUTATION = RxJavaPlugins.initComputationScheduler(new ComputationTask());
@@ -200,6 +200,8 @@ public final class Schedulers {
      * </ul>
      * @return a {@code Scheduler} meant for IO-bound work
      */
+
+    // 为 I/O 密集型任务（如网络请求、文件读写）设计的调度器
     @NonNull
     public static Scheduler io() {
         return RxJavaPlugins.onIoScheduler(IO);

@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class RxThreadFactory extends AtomicLong implements ThreadFactory {
 
+
     private static final long serialVersionUID = -7789753024099756196L;
 
     final String prefix;
@@ -43,9 +44,9 @@ public final class RxThreadFactory extends AtomicLong implements ThreadFactory {
     }
 
     public RxThreadFactory(String prefix, int priority, boolean nonBlocking) {
-        this.prefix = prefix;
-        this.priority = priority;
-        this.nonBlocking = nonBlocking;
+        this.prefix = prefix;// 线程名前缀
+        this.priority = priority;// 线程优先级
+        this.nonBlocking = nonBlocking;// 是否非阻塞（影响线程状态标记）, 默认阻塞
     }
 
     @Override

@@ -7,7 +7,9 @@ import com.liang.log.MLog;
 import com.liang.rxjava3.core.Observable;
 import com.liang.rxjava3.core.ObservableEmitter;
 import com.liang.rxjava3.core.ObservableOnSubscribe;
+import com.liang.rxjava3.core.Observer;
 import com.liang.rxjava3.core.Scheduler;
+import com.liang.rxjava3.disposables.Disposable;
 import com.liang.rxjava3.functions.Function;
 import com.liang.rxjava3.plugins.RxJavaPlugins;
 import com.liang.rxjava3.schedulers.Schedulers;
@@ -50,38 +52,15 @@ public class RxJavaUtil {
 
 
 
-
     @SuppressLint("CheckResult")
     public static void test2() {
 
-
-        MLog.i(TAG + "test: " + Runtime.getRuntime().availableProcessors());
-
-
-
-        // 创建一个核心线程数为2，最大线程数为4，空闲时间为30秒的线程池
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(
-                1, // corePoolSize
-                1, // maximumPoolSize
-                30, // keepAliveTime
-                TimeUnit.SECONDS, // unit
-                new LinkedBlockingQueue<>(1)); // workQueue
-
-        // 提交任务给线程池
-        for (int i = 0; i < 100; i++) {
-            executor.submit(() -> {
-                MLog.i(TAG + "Task executed by " + Thread.currentThread().getName());
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        System.setProperty("rx3.io-priority", String.valueOf(6));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
-
-        // 关闭线程池
-        executor.shutdown();
-
         RxJavaPlugins.setOnObservableAssembly(new Function<Observable, Observable>() {
             @Override
             public Observable apply(Observable observable) throws Exception {
@@ -103,17 +82,41 @@ public class RxJavaUtil {
             public void subscribe(ObservableEmitter<Integer> emitter) throws Exception {
                 MLog.i(TAG + "observable create " + Thread.currentThread().getName());
                 emitter.onNext(1);
+                emitter.onComplete();
             }
         });
 
         observable.observeOn(Schedulers.io())
-               // .subscribeOn(Schedulers.io())
-                .subscribe(v -> MLog.i(TAG + "onnext " + Thread.currentThread().getName()));
+                // .subscribeOn(Schedulers.io())
+                .subscribe(new Observer<Integer>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        MLog.i(TAG + "onSubscribe " + Thread.currentThread().getName());
+                    }
 
-//        ThreadPoolExecutor executor = new ThreadPoolExecutor();
-//        executor.execute();
+                    @Override
+                    public void onNext(Integer integer) {
+                        MLog.i(TAG + "onNext " + Thread.currentThread().getName());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        MLog.i(TAG + "onError " + Thread.currentThread().getName());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        MLog.i(TAG + "onComplete " + Thread.currentThread().getName());
+                    }
+                });
+
+
+
+        // v -> MLog.i(TAG + "onnext " + Thread.currentThread().getName())
+
 
     }
+
 
 
 
