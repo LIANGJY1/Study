@@ -32,6 +32,7 @@ public class NewThreadWorker extends Scheduler.Worker {
     volatile boolean disposed;
 
     public NewThreadWorker(ThreadFactory threadFactory) {
+//        System.out.println("NewThreadWorker threadFactory: " + threadFactory.toString());
         executor = SchedulerPoolFactory.create(threadFactory);
     }
 

@@ -3,6 +3,7 @@ package com.example.studysdk.util;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 
+import com.example.javatest.concurrent.atomic.AtomicInteger;
 import com.liang.log.MLog;
 import com.liang.rxjava3.core.Observable;
 import com.liang.rxjava3.core.ObservableEmitter;
@@ -54,6 +55,7 @@ public class RxJavaUtil {
 
     @SuppressLint("CheckResult")
     public static void test2() {
+
 
         System.setProperty("rx3.io-priority", String.valueOf(6));
         try {

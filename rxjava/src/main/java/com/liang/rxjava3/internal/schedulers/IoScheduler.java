@@ -116,6 +116,7 @@ public final class IoScheduler extends Scheduler {
 
             // No cached worker found, so create a new one.
             ThreadWorker w = new ThreadWorker(threadFactory);
+            System.out.println("IoScheduler CachedWorkerPool ThreadWorker get: " + threadFactory.toString());
             allWorkers.add(w);
             return w;
         }
@@ -178,8 +179,8 @@ public final class IoScheduler extends Scheduler {
     @Override
     public void start() {
         CachedWorkerPool update = new CachedWorkerPool(KEEP_ALIVE_TIME, KEEP_ALIVE_UNIT, threadFactory);// 60s RxThreadFactory
-        if (!pool.compareAndSet(NONE, update)) {
-            update.shutdown();
+        if (!pool.compareAndSet(NONE, update)) {// pool 为 NONE，则替换为 update
+            update.shutdown();// 如果没有替换为 update，执行 shutdown
         }
     }
 
@@ -194,6 +195,7 @@ public final class IoScheduler extends Scheduler {
     @NonNull
     @Override
     public Worker createWorker() {
+        System.out.println("IoScheduler createWorker pool.get(): " + pool.get());
         return new EventLoopWorker(pool.get());
     }
 
@@ -212,6 +214,7 @@ public final class IoScheduler extends Scheduler {
             this.pool = pool;
             this.tasks = new CompositeDisposable();
             this.threadWorker = pool.get();
+            System.out.println("IoScheduler EventLoopWorker threadWorker: " + this.threadWorker.toString());
         }
 
         @Override
