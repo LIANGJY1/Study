@@ -23,6 +23,7 @@ import com.example.study.notification.NotificationActivity;
 import com.example.study.pattern.singleton.Person;
 import com.example.study.service.ServiceTestActivity;
 import com.example.study.util.tool.LogUtil;
+import com.example.study.util.tool.SharedPreferencesUtil;
 import com.example.study.viewDemo.ViewDemoActivity;
 import com.example.studysdk.util.ApkUtil;
 import com.example.studysdk.util.RxJavaUtil;
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         RxJavaUtil.test2();
 //        ApkUtil.test(MainActivity.this);
 //        ApkUtil.test1();
+        SharedPreferencesUtil.getInstance().init(this);
     }
 
     @Override
