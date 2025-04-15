@@ -32,6 +32,7 @@ public class ApkUtil {
                 "{\"servicePackage\":\"Alice\",\"hmiPackage\":3540,\"name\":\"Alice\",\"usage\":30}",
                 "{\"servicePackage\":\"Alice\",\"hmiPackage\":30,\"name\":\"Alice\",\"usage\":30}"
         );
+//        asApps = new ArrayList<>();
         MLog.i(TAG+"secondScreenAppConfig:"+asApps);
         Map<String, Set<String>> map =new HashMap<>();
         for (String s : asApps) {
@@ -85,6 +86,28 @@ public class ApkUtil {
                 MLog.i(TAG+"secondScreenAppConfig2: " + s + "," + strings);
             }
         });
+    }
+
+    public static void test2() {
+        // 创建一个 HashMap 对象
+        Map<String, String[]> map = new HashMap<>();
+
+        map.put("key1", new String[]{"value1a", "value1b", "value1c"});
+        map.put("key2", new String[]{"value2a", "value2b"});
+        map.put("key3", new String[]{"value3a", "value3b", "value3c", "value3d"});
+
+//        MLog.i(TAG + map.toString());
+//        map.forEach((key, value) -> MLog.i(TAG+ key + "    "+ value));
+
+
+        // 打印 Map 中的所有键值对
+        for (Map.Entry<String, String[]> entry : map.entrySet()) {
+            MLog.i(TAG + "Key: " + entry.getKey() + ", Values: ");
+            for (String value : entry.getValue()) {
+                MLog.i(TAG + value + " ");
+            }
+            MLog.i(TAG + "================================================= ");
+        }
     }
 
     public static void test(Context context) {

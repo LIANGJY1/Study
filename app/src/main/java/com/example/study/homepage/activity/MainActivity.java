@@ -41,8 +41,8 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         initializeActivity();
         RxJavaUtil.test2();
 //        ApkUtil.test(MainActivity.this);
-//        ApkUtil.test1();
-        SharedPreferencesUtil.getInstance().init(this);
+        ApkUtil.test2();
+//        SharedPreferencesUtil.getInstance().init(this);
     }
 
     @Override
