@@ -39,9 +39,9 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     protected void afterSetContentView() {
         super.afterSetContentView();
         initializeActivity();
-        RxJavaUtil.test2();
+//        RxJavaUtil.test2();
 //        ApkUtil.test(MainActivity.this);
-        ApkUtil.test2();
+//        ApkUtil.test2();
 //        SharedPreferencesUtil.getInstance().init(this);
     }
 
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
 //                startActivity(intent);
 //            }
 //        });
-        getViewBound().btJava.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, JavaDemoActivity.class)));
+        getViewBound().btJava.setOnClickListener(v -> SharedPreferencesUtil.getInstance().init(this));
         getViewBound().btAidl.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BinderDemoActivity.class)));
         getViewBound().btNotification.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, NotificationActivity.class)));
         getViewBound().btBroadcast.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BroadcastActivity.class)));

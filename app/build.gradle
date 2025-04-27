@@ -1,5 +1,9 @@
 plugins {
     id 'com.android.application'
+    id 'org.greenrobot.greendao'
+//    id 'com.liang.lifecycle'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.liang.plugin'
 }
 
 android {
@@ -26,6 +30,14 @@ android {
         viewBinding = true
         aidl = true
     }
+    greendao {
+        schemaVersion 1 //数据库版本号
+        daoPackage 'com.example.study.database.greendao'
+// 设置DaoMaster、DaoSession、Dao 包名
+//        targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录,请注意，这里路径用/不要用.
+//        generateTests false //设置为true以自动生成单元测试。
+//        targetGenDirTests 'src/main/java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java。
+    }
 }
 
 dependencies {
@@ -35,8 +47,9 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.6.0'
     implementation 'androidx.navigation:navigation-ui:2.6.0'
-//    implementation "com.liang.rxjava2:rxjava:2.2.19"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.19"
     implementation 'androidx.activity:activity:1.8.0'
+    implementation 'net.zetetic:android-database-sqlcipher:4.5.3'
     testImplementation 'junit:junit:4.14-SNAPSHOT'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -46,9 +59,20 @@ dependencies {
     implementation "androidx.navigation:navigation-ui:$nav_version"
     implementation "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
     androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
+//    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3"
     implementation(name: 'IpcCompat', ext: 'aar')
     implementation project(":studySDK")
     implementation project(":rxjava")
     implementation(name: 'MLog', ext: 'aar')
+
+    compileOnly 'com.google.android:android:4.1.1.4'
+    compileOnly 'com.google.android:android-test:4.1.1.4'
+    compileOnly 'com.google.android:annotations:4.1.1.4'
+    implementation 'org.greenrobot:greendao:3.2.2'
+}
+
+TestPlugin {
+    includePackages = ['com.example.study.homepage.activity']
+    includeMethods = ["onCreate"]
+    logTag = 'Plugin-old'
 }

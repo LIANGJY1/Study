@@ -1,5 +1,35 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext {
+        agp_version = '8.5'
+        agp_version1 = '7.4.2'
+        agp_version2 = '4.2.2'
+        agp_version3 = '3.4.2'
+        agp_version4 = '3.4.2'
+        agp_version5 = '4.2.2'
+        agp_version6 = '7.4.2'
+        agp_version7 = '7.4.2'
+        agp_version8 = '7.4.2'
+        agp_version9 = '8.3.2'
+    }
+    repositories {
+        jcenter()
+        mavenCentral() // add repository
+        mavenLocal()
+        maven {
+            url '\\localmaven'
+        }
+    }
+    dependencies {
+        classpath 'org.greenrobot:greendao-gradle-plugin:3.3.1' // add plugin
+        classpath 'com.liang.ams_plugin:asm_plugins:1.0.0'
+        classpath 'com.lifecycle.plugin:asm_plugins:1.0.0'
+        classpath 'com.liang.plugin:Plugin:0.0.1'
+    }
+}
 plugins {
-id 'com.android.application' version '8.2.1' apply false
+id 'com.android.application' version '8.3.2' apply false
     id 'com.android.library' version '8.2.1' apply false
+    id 'org.jetbrains.kotlin.android' version '1.8.21' apply false
 }

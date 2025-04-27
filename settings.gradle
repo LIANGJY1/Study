@@ -3,6 +3,7 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
+        maven { url '../asm_lifecycle_repo' }
     }
 }
 dependencyResolutionManagement {
@@ -21,3 +22,5 @@ include ':app'
 include ':javaTest'
 include ':studySDK'
 include ':rxjava'
+include ':lib'
+include ':plugin'
