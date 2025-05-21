@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.javatest.thread.ThreadMXBeanUtil;
+import com.example.study.ControllerService;
 import com.example.study.activityTest.ActivityTestActivity;
 import com.example.study.base.BaseActivity;
 import com.example.study.binderDemo.BinderDemoActivity;
@@ -21,11 +24,13 @@ import com.example.study.homepage.presenter.MainPresenter;
 import com.example.study.javaDemo.JavaDemoActivity;
 import com.example.study.notification.NotificationActivity;
 import com.example.study.pattern.singleton.Person;
+import com.example.study.pms.PMSActivity;
 import com.example.study.service.ServiceTestActivity;
 import com.example.study.util.tool.LogUtil;
 import com.example.study.util.tool.SharedPreferencesUtil;
 import com.example.study.viewDemo.ViewDemoActivity;
 import com.example.studysdk.util.ApkUtil;
+import com.example.studysdk.util.DebugUtil;
 import com.example.studysdk.util.RxJavaUtil;
 import com.liang.log.MLog;
 
@@ -36,13 +41,20 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     private static final int REQUEST_CAMERA_PERMISSION = 1;
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
     protected void afterSetContentView() {
         super.afterSetContentView();
+        startService(new Intent(MainActivity.this, ControllerService.class));
         initializeActivity();
 //        RxJavaUtil.test2();
 //        ApkUtil.test(MainActivity.this);
 //        ApkUtil.test2();
 //        SharedPreferencesUtil.getInstance().init(this);
+//        ThreadMXBeanUtil.test();
     }
 
     @Override
@@ -84,6 +96,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         getViewBound().btBroadcast.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BroadcastActivity.class)));
         getViewBound().btActivity.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ActivityTestActivity.class)));
         getViewBound().btService.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ServiceTestActivity.class)));
+        getViewBound().btPms.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PMSActivity.class)));
     }
 
     private void test() {
@@ -125,6 +138,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        DebugUtil.printStackTrace("onCreate", Integer.MAX_VALUE);
         super.onCreate(savedInstanceState);
         Person.run();
 //        MLog.i(LogUtil.getCurrentMethodName());
@@ -153,12 +167,14 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
 
     @Override
     protected void onStart() {
+        DebugUtil.printStackTrace("onStart", Integer.MAX_VALUE);
         super.onStart();
         MLog.i(LogUtil.getCurrentMethodName());
     }
 
     @Override
     protected void onResume() {
+        DebugUtil.printStackTrace("onResume", Integer.MAX_VALUE);
         super.onResume();
         MLog.i(LogUtil.getCurrentMethodName());
     }
@@ -184,7 +200,9 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        MLog.i(LogUtil.getCurrentMethodName());
+//        MLog.i(LogUtil.getCurrentMethodName());
+        MLog.i("onSaveInstanceState 1");
+        DebugUtil.printStackTrace("onSaveInstanceState", Integer.MAX_VALUE);
     }
 
     @Override

@@ -49,6 +49,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Service test"/>
+            <Button
+                android:id="@+id/bt_pms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PMS test"/>
         </LinearLayout>
     </ScrollView>
 

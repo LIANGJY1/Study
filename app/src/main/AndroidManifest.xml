@@ -18,6 +18,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CAMERA" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission
+        android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.DELETE_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".App"
@@ -31,13 +37,27 @@
         android:theme="@style/Theme.Study"
         tools:targetApi="31">
         <activity
-            android:name=".greendao.GreenDaoTestActivity"
-            android:exported="true" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:name=".pms.PMSActivity"
+            android:exported="false" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+        <service
+            android:name=".ControllerService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".provider.ProviderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".greendao.GreenDaoTestActivity"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".service.ServiceTestActivity"
