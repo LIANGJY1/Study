@@ -25,6 +25,7 @@ import com.example.study.javaDemo.JavaDemoActivity;
 import com.example.study.notification.NotificationActivity;
 import com.example.study.pattern.singleton.Person;
 import com.example.study.pms.PMSActivity;
+import com.example.study.provider.ProviderActivity;
 import com.example.study.service.ServiceTestActivity;
 import com.example.study.util.tool.LogUtil;
 import com.example.study.util.tool.SharedPreferencesUtil;
@@ -97,6 +98,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         getViewBound().btActivity.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ActivityTestActivity.class)));
         getViewBound().btService.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ServiceTestActivity.class)));
         getViewBound().btPms.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PMSActivity.class)));
+        getViewBound().btProvider.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ProviderActivity.class)));
     }
 
     private void test() {

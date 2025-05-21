@@ -9,8 +9,10 @@
     tools:context=".provider.ProviderActivity">
 
     <Button
+        android:id="@+id/read_contacts"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:text="read contacts"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
