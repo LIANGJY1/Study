@@ -38,11 +38,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Study"
         tools:targetApi="31">
+        <activity
+            android:name=".fragment.FragmentTestActivity"
+            android:exported="false" />
+
         <service
             android:name=".service.MyUserService"
             android:enabled="true"
-            android:process=":user"
-            android:exported="true"/>
+            android:exported="true"
+            android:process=":user" />
 
         <provider
             android:name=".provider.DBProvider"

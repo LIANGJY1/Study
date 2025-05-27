@@ -20,6 +20,7 @@ import com.example.study.base.BaseActivity;
 import com.example.study.binderDemo.BinderDemoActivity;
 import com.example.study.broadcast.BroadcastActivity;
 import com.example.study.databinding.ActivityMainBinding;
+import com.example.study.fragment.FragmentTestActivity;
 import com.example.study.homepage.presenter.MainPresenter;
 import com.example.study.javaDemo.JavaDemoActivity;
 import com.example.study.notification.NotificationActivity;
@@ -99,6 +100,7 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
         getViewBound().btService.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ServiceTestActivity.class)));
         getViewBound().btPms.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, PMSActivity.class)));
         getViewBound().btProvider.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ProviderActivity.class)));
+        getViewBound().btFragment.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, FragmentTestActivity.class)));
     }
 
     private void test() {

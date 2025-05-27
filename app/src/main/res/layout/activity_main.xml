@@ -59,6 +59,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Provider test"/>
+            <Button
+                android:id="@+id/bt_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Fragment test"/>
         </LinearLayout>
     </ScrollView>
 
