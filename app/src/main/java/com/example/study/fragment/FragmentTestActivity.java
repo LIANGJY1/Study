@@ -1,14 +1,5 @@
 package com.example.study.fragment;
 
-import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import com.example.study.R;
 import com.example.study.base.BaseActivity;
 import com.example.study.databinding.ActivityFragmentTestBinding;
 
@@ -21,6 +12,7 @@ public class FragmentTestActivity extends BaseActivity<FragmentTestPresenter, Ac
     }
 
     private void initializeActivity() {
+        getViewBound().btCreateFragment.setOnClickListener(v -> mPresenter.createFragment());
     }
 
     @Override
