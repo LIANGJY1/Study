@@ -5,6 +5,9 @@ import com.liang.log.MLog;
 public class DebugUtil {
 
     public static void printStackTrace(String method, int stackLength) {
+        if (!"null".equals(method)) {
+            return;
+        }
         if (stackLength == Integer.MAX_VALUE) {
             stackLength -= 2;
         }

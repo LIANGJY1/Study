@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.study.R;
+import com.example.studysdk.util.DebugUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +29,7 @@ public class LeftFragment extends Fragment {
 
     public LeftFragment() {
         // Required empty public constructor
+        DebugUtil.printStackTrace("LeftFragment", Integer.MAX_VALUE);
     }
 
     /**

@@ -164,43 +164,16 @@ public class MainActivity extends BaseActivity<MainPresenter, ActivityMainBindin
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        MLog.i(LogUtil.getCurrentMethodName());
-    }
-
-    @Override
     protected void onStart() {
         DebugUtil.printStackTrace("onStart", Integer.MAX_VALUE);
         super.onStart();
-        MLog.i(LogUtil.getCurrentMethodName());
     }
 
     @Override
     protected void onResume() {
         DebugUtil.printStackTrace("onResume", Integer.MAX_VALUE);
         super.onResume();
-        MLog.i(LogUtil.getCurrentMethodName());
     }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MLog.i(LogUtil.getCurrentMethodName());
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MLog.i(LogUtil.getCurrentMethodName());
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        MLog.i(LogUtil.getCurrentMethodName());
-    }
-
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);

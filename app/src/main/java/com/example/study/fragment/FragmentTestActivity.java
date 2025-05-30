@@ -9,10 +9,12 @@ public class FragmentTestActivity extends BaseActivity<FragmentTestPresenter, Ac
     protected void afterSetContentView() {
         super.afterSetContentView();
         initializeActivity();
+//        mPresenter.replaceFragment(FragmentTestActivity.this);
     }
 
     private void initializeActivity() {
         getViewBound().btCreateFragment.setOnClickListener(v -> mPresenter.createFragment());
+        getViewBound().btReplaceFragment.setOnClickListener(v -> mPresenter.replaceFragment(FragmentTestActivity.this));
     }
 
     @Override
